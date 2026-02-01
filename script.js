@@ -12,6 +12,39 @@ function positionLayout() {
 
     if (!hero || !block || !spanD || !spanDT || !spanDI || !spanIAW || !quote) return;
 
+    // Mobile layout — position red block behind DESIGN word
+    if (window.innerWidth <= 768) {
+        // Clear desktop inline styles
+        quote.style.position = '';
+        quote.style.left = '';
+        quote.style.top = '';
+        spanDI.style.width = '';
+        spanIAW.style.width = '';
+        var author = document.querySelector('.hero__author');
+        if (author) author.style.top = '';
+
+        // Position red block: starts at DESIGN, extends to right edge, tall rectangle
+        var h = hero.getBoundingClientRect();
+        var d = spanD.getBoundingClientRect();
+        var spanG = document.getElementById('span-graphic');
+        var gRight = spanG ? spanG.getBoundingClientRect().right : d.left;
+        var padLeft = Math.max(d.left - gRight - 2, 0);
+        var blockLeft = d.left - h.left - padLeft;
+        var blockWidth = h.width - blockLeft; // extend to right edge
+        var blockHeight = d.height * 2.5;
+        // Center block vertically on DESIGN, clamp to headline top
+        var headline = document.getElementById('headline');
+        var headlineTop = headline ? headline.getBoundingClientRect().top - h.top : d.top - h.top;
+        var blockTop = d.top - h.top - (blockHeight - d.height) / 2;
+        if (blockTop < headlineTop) blockTop = headlineTop;
+
+        block.style.left   = blockLeft + 'px';
+        block.style.top    = blockTop + 'px';
+        block.style.width  = blockWidth + 'px';
+        block.style.height = blockHeight + 'px';
+        return;
+    }
+
     // --- Step 0: Equalize inside-span widths for grid column alignment ---
     spanDI.style.width  = '';
     spanIAW.style.width = '';
@@ -212,14 +245,26 @@ function setLanguage(lang) {
     var contactHL = document.getElementById('contact-headline');
     if (contactHL) contactHL.textContent = t.contactHeadline;
 
-    // Update active language styling
-    var engSpan = document.getElementById('lang-eng');
-    var plSpan  = document.getElementById('lang-pl');
-    if (engSpan && plSpan) {
-        engSpan.classList.toggle('header__lang-active', lang === 'en');
-        engSpan.classList.toggle('header__lang-inactive', lang !== 'en');
-        plSpan.classList.toggle('header__lang-active', lang === 'pl');
-        plSpan.classList.toggle('header__lang-inactive', lang !== 'pl');
+    // Update active language styling (desktop + mobile)
+    var langPairs = [
+        [document.getElementById('lang-eng'), document.getElementById('lang-pl')],
+        [document.getElementById('mobile-lang-eng'), document.getElementById('mobile-lang-pl')]
+    ];
+    for (var p = 0; p < langPairs.length; p++) {
+        var engSpan = langPairs[p][0];
+        var plSpan  = langPairs[p][1];
+        if (engSpan && plSpan) {
+            engSpan.classList.toggle('header__lang-active', lang === 'en');
+            engSpan.classList.toggle('header__lang-inactive', lang !== 'en');
+            plSpan.classList.toggle('header__lang-active', lang === 'pl');
+            plSpan.classList.toggle('header__lang-inactive', lang !== 'pl');
+        }
+    }
+
+    // Update mobile menu links
+    var mobileLinks = document.querySelectorAll('.mobile-menu__link');
+    for (var i = 0; i < mobileLinks.length && i < t.nav.length; i++) {
+        mobileLinks[i].textContent = t.nav[i];
     }
 
     // Re-calculate layout after text change
@@ -311,8 +356,31 @@ function initStickyFilters() {
 function initLanguageSwitcher() {
     var engSpan = document.getElementById('lang-eng');
     var plSpan  = document.getElementById('lang-pl');
+    var mEngSpan = document.getElementById('mobile-lang-eng');
+    var mPlSpan  = document.getElementById('mobile-lang-pl');
     if (engSpan) engSpan.addEventListener('click', function() { setLanguage('en'); });
     if (plSpan)  plSpan.addEventListener('click', function()  { setLanguage('pl'); });
+    if (mEngSpan) mEngSpan.addEventListener('click', function() { setLanguage('en'); });
+    if (mPlSpan)  mPlSpan.addEventListener('click', function()  { setLanguage('pl'); });
+}
+
+function initMobileMenu() {
+    var hamburger = document.getElementById('hamburger-btn');
+    var mobileMenu = document.getElementById('mobile-menu');
+    if (!hamburger || !mobileMenu) return;
+
+    hamburger.addEventListener('click', function() {
+        mobileMenu.classList.toggle('mobile-menu--open');
+        hamburger.classList.toggle('header__hamburger--active');
+    });
+
+    var mobileLinks = mobileMenu.querySelectorAll('.mobile-menu__link');
+    for (var i = 0; i < mobileLinks.length; i++) {
+        mobileLinks[i].addEventListener('click', function() {
+            mobileMenu.classList.remove('mobile-menu--open');
+            hamburger.classList.remove('header__hamburger--active');
+        });
+    }
 }
 
 if (document.fonts && document.fonts.ready) {
@@ -322,6 +390,7 @@ if (document.fonts && document.fonts.ready) {
         initNavActiveState();
         initProjectFilters();
         initStickyFilters();
+        initMobileMenu();
     });
 } else {
     window.addEventListener('load', function() {
@@ -330,6 +399,7 @@ if (document.fonts && document.fonts.ready) {
         initNavActiveState();
         initProjectFilters();
         initStickyFilters();
+        initMobileMenu();
     });
 }
 window.addEventListener('resize', positionLayout);

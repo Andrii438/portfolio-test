@@ -18,6 +18,11 @@
     </div>
 
     <header class="header">
+        <button class="header__hamburger" id="hamburger-btn" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
         <a href="#hero" class="header__logo">Valeria Kozinna</a>
         <nav class="header__nav">
             <a href="#about" class="header__nav-link">About me</a>
@@ -26,6 +31,17 @@
         </nav>
         <div class="header__lang"><span id="lang-eng" class="header__lang-active">ENG</span> <span class="header__lang-sep">|</span> <span id="lang-pl" class="header__lang-inactive">PL</span></div>
     </header>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="#about" class="mobile-menu__link">About me</a>
+        <a href="#projects" class="mobile-menu__link">Projects</a>
+        <a href="#contact" class="mobile-menu__link">Contact</a>
+        <div class="mobile-menu__lang">
+            <span id="mobile-lang-eng" class="header__lang-active">ENG</span>
+            <span class="header__lang-sep">|</span>
+            <span id="mobile-lang-pl" class="header__lang-inactive">PL</span>
+        </div>
+    </div>
 
     <section class="hero" id="hero">
         <!--
