@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valeriia Kozinna — Graphic Designer & Illustrator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="projects__filters-sticky" id="projects-filters-sticky">
+        <button class="projects__filter projects__filter--active" data-category="logos">Logos</button>
+        <button class="projects__filter" data-category="illustrations">Illustrations</button>
+        <button class="projects__filter" data-category="social-media">Social media</button>
+        <button class="projects__filter" data-category="print-ads">Print ads</button>
+    </div>
+
+    <header class="header">
+        <a href="#hero" class="header__logo">Valeria Kozinna</a>
+        <nav class="header__nav">
+            <a href="#about" class="header__nav-link">About me</a>
+            <a href="#projects" class="header__nav-link">Projects</a>
+            <a href="#contact" class="header__nav-link">Contact</a>
+        </nav>
+        <div class="header__lang"><span id="lang-eng" class="header__lang-active">ENG</span> <span class="header__lang-sep">|</span> <span id="lang-pl" class="header__lang-inactive">PL</span></div>
+    </header>
+
+    <section class="hero" id="hero">
+        <!--
+            LAYER 1 (z-index: 1) — Red Rectangle.
+            Positioned by JavaScript after measuring text bounding boxes.
+            Width is derived from "DESIGN" span so it fully contains that word.
+        -->
+        <div class="hero__red-block" id="red-block"></div>
+
+        <!-- Decorative small red square (top-right) -->
+        <div class="hero__red-square"></div>
+
+        <!--
+            LAYER 2 (z-index: 2) — All text.
+            Each critical word/phrase has its own span + id for measurement.
+        -->
+        <p class="hero__quote" id="quote">
+            <span class="hero__quote-line">
+                <span id="span-design-is">Design is  </span><span id="span-not-decoration">not decoration.</span>
+            </span>
+            <span class="hero__quote-line">
+                <span id="span-its-a-way">It's a way </span><span id="span-to-organize">to organize meaning.</span>
+            </span>
+        </p>
+
+        <h1 class="hero__headline" id="headline">
+            <span class="hero__headline-line">
+                <span id="span-graphic">GRAPHIC </span><span class="hero__headline-red" id="span-design"><span id="span-design-text">DESIGN</span></span>
+            </span>
+            <span class="hero__headline-line" id="span-illustration">&amp; ILLUSTRATION</span>
+        </h1>
+
+        <div class="hero__author">
+            <span class="hero__author-name">Valeriia Kozinna</span>
+            <span class="hero__author-role" id="span-author-role">Graphic Designer &amp; Illustrator</span>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="about__content">
+            <div class="about__image-col">
+                <div class="about__red-upper"></div>
+                <div class="about__photo-frame">
+                    <img src="asset/about_me.jpg" alt="Valeriia Kozinna" class="about__photo" />
+                    <div class="about__red-lower"></div>
+                </div>
+            </div>
+            <div class="about__text-col">
+                <h2 class="about__headline" id="about-headline">ABOUT ME</h2>
+                <div class="about__body-wrap">
+                    <p class="about__body" id="about-body">Graphic designer and illustrator<br>with <strong class="about__highlight">4 years of professional experience.</strong></p>
+                    <p class="about__body about__body--second" id="about-body2">I create visual identities and illustrations that speak before words do — <strong class="about__highlight">clear in structure, bold in feeling.</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="projects" class="projects">
+        <h2 class="projects__headline" id="projects-headline">PROJECTS</h2>
+
+        <div class="projects__filters">
+            <button class="projects__filter projects__filter--active" data-category="logos">Logos</button>
+            <button class="projects__filter" data-category="illustrations">Illustrations</button>
+            <button class="projects__filter" data-category="social-media">Social media</button>
+            <button class="projects__filter" data-category="print-ads">Print ads</button>
+        </div>
+
+        <div class="projects__grid">
+            <div class="projects__card">
+                <div class="projects__card-image"></div>
+                <button class="projects__card-more">more</button>
+            </div>
+            <div class="projects__card">
+                <div class="projects__card-image"></div>
+                <button class="projects__card-more">more</button>
+            </div>
+            <div class="projects__card">
+                <div class="projects__card-image"></div>
+                <button class="projects__card-more">more</button>
+            </div>
+            <div class="projects__card">
+                <div class="projects__card-image"></div>
+                <button class="projects__card-more">more</button>
+            </div>
+            <div class="projects__card">
+                <div class="projects__card-image"></div>
+                <button class="projects__card-more">more</button>
+            </div>
+            <div class="projects__card">
+                <div class="projects__card-image"></div>
+                <button class="projects__card-more">more</button>
+            </div>
+        </div>
+
+        <div class="projects__see-more">
+            <button class="projects__see-more-btn" id="see-more-btn">See more projects</button>
+        </div>
+    </section>
+    <section id="contact" class="contact">
+        <h2 class="contact__headline" id="contact-headline">CONTACT</h2>
+
+        <div class="contact__content">
+            <div class="contact__card">
+                <p class="contact__name">VALERIIA KOZINNA</p>
+                <a href="tel:+48796501780" class="contact__phone">+48 796 501 780</a>
+            </div>
+
+            <div class="contact__social">
+                <a href="mailto:designvaleriiak@gmail.com" class="contact__social-link">
+                    <svg class="contact__social-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    <span>designvaleriiak@gmail.com</span>
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61582269208037" class="contact__social-link" target="_blank">
+                    <svg class="contact__social-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02z"/></svg>
+                    <span>Valeriia Kozinna</span>
+                </a>
+                <a href="https://t.me/lera_li_w" class="contact__social-link" target="_blank">
+                    <svg class="contact__social-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                    <span>lera_li_w</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
