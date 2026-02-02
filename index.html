@@ -151,6 +151,15 @@
                 </div>
                 <button class="projects__card-more">more</button>
             </div>
+
+            <div class="projects__card"
+                 data-category="illustrations"
+                 data-images='[{"src":"asset/illustrations/children_book_illustration.png","label":"Artwork","alt":"Children&#39;s Book Illustration"},{"src":"asset/illustrations/opened_book_in_hand_mockup_1.png","label":"In Context","alt":"Children&#39;s Book Illustration - Book Mockup"}]'>
+                <div class="projects__card-image">
+                    <img src="asset/illustrations/children_book_illustration.png" alt="Children's Book Illustration" loading="lazy">
+                </div>
+                <button class="projects__card-more">more</button>
+            </div>
         </div>
 
         <div class="projects__see-more">
@@ -186,12 +195,15 @@
     <!-- Lightbox Popup -->
     <div class="lightbox" id="lightbox">
         <button class="lightbox__close" id="lightbox-close" aria-label="Close">&times;</button>
-        <button class="lightbox__prev" id="lightbox-prev" aria-label="Previous">&#10094;</button>
-        <button class="lightbox__next" id="lightbox-next" aria-label="Next">&#10095;</button>
+        <button class="lightbox__prev" id="lightbox-prev" aria-label="Previous Project">&#10094;</button>
+        <button class="lightbox__next" id="lightbox-next" aria-label="Next Project">&#10095;</button>
         <div class="lightbox__content">
-            <img src="" alt="" class="lightbox__image" id="lightbox-image">
+            <div class="lightbox__image-container">
+                <img src="" alt="" class="lightbox__image" id="lightbox-image">
+            </div>
             <p class="lightbox__caption" id="lightbox-caption"></p>
             <p class="lightbox__counter" id="lightbox-counter"></p>
+            <div class="lightbox__tabs" id="lightbox-tabs"></div>
         </div>
     </div>
 

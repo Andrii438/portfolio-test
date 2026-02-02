@@ -453,28 +453,40 @@ function initLightbox() {
     var lightboxImage = document.getElementById('lightbox-image');
     var lightboxCaption = document.getElementById('lightbox-caption');
     var lightboxCounter = document.getElementById('lightbox-counter');
+    var lightboxTabs = document.getElementById('lightbox-tabs');
     var closeBtn = document.getElementById('lightbox-close');
     var prevBtn = document.getElementById('lightbox-prev');
     var nextBtn = document.getElementById('lightbox-next');
-    var allCategoryImages = [];
-    var currentIndex = 0;
+    var lightboxProjects = [];
+    var currentProjectIndex = 0;
+    var currentImageIndex = 0;
     if (!lightbox) return;
 
-    function updateImageList() {
+    function updateProjectList() {
         var allCards = document.querySelectorAll('.projects__card[data-category="' + currentFilter + '"]');
-        allCategoryImages = [];
+        lightboxProjects = [];
         allCards.forEach(function(card) {
-            var img = card.querySelector('.projects__card-image img');
-            if (img) {
-                allCategoryImages.push({ src: img.src, alt: img.alt });
+            var project = { images: [] };
+            var imagesData = card.getAttribute('data-images');
+            if (imagesData) {
+                try { project.images = JSON.parse(imagesData); } catch (e) {}
             }
+            if (project.images.length === 0) {
+                var img = card.querySelector('.projects__card-image img');
+                if (img) {
+                    project.images.push({ src: img.src, label: '', alt: img.alt });
+                }
+            }
+            if (project.images.length > 0) lightboxProjects.push(project);
         });
     }
 
     function openLightbox(index) {
-        updateImageList();
-        currentIndex = (index >= 0 && index < allCategoryImages.length) ? index : 0;
-        showImage();
+        updateProjectList();
+        currentProjectIndex = (index >= 0 && index < lightboxProjects.length) ? index : 0;
+        currentImageIndex = 0;
+        showCurrentImage();
+        renderTabs();
         lightbox.classList.add('lightbox--open');
         document.body.style.overflow = 'hidden';
     }
@@ -484,33 +496,98 @@ function initLightbox() {
         document.body.style.overflow = '';
     }
 
-    function showImage() {
-        if (allCategoryImages[currentIndex]) {
-            lightboxImage.src = allCategoryImages[currentIndex].src;
-            lightboxImage.alt = allCategoryImages[currentIndex].alt;
-            lightboxCaption.textContent = allCategoryImages[currentIndex].alt;
+    function showCurrentImage() {
+        var project = lightboxProjects[currentProjectIndex];
+        if (!project || !project.images[currentImageIndex]) return;
+        var imageData = project.images[currentImageIndex];
+
+        lightboxImage.style.opacity = '0.5';
+        var img = new Image();
+        img.onload = function() {
+            lightboxImage.src = imageData.src;
+            lightboxImage.alt = imageData.alt || '';
+            lightboxImage.style.opacity = '1';
+        };
+        img.src = imageData.src;
+
+        lightboxCaption.textContent = imageData.alt || '';
+
+        var counter = (currentProjectIndex + 1) + ' / ' + lightboxProjects.length;
+        if (project.images.length > 1) {
+            counter += ' \u2022 ' + (currentImageIndex + 1) + '/' + project.images.length;
         }
-        if (lightboxCounter) {
-            lightboxCounter.textContent = (currentIndex + 1) + ' / ' + allCategoryImages.length;
+        lightboxCounter.textContent = counter;
+
+        updateActiveTabs();
+        preloadImages();
+    }
+
+    function renderTabs() {
+        if (!lightboxTabs) return;
+        lightboxTabs.innerHTML = '';
+        var project = lightboxProjects[currentProjectIndex];
+        if (!project || project.images.length <= 1) return;
+
+        project.images.forEach(function(img, index) {
+            var tab = document.createElement('button');
+            tab.className = 'lightbox__tab' + (index === currentImageIndex ? ' lightbox__tab--active' : '');
+            tab.textContent = img.label || ('View ' + (index + 1));
+            tab.addEventListener('click', function() {
+                currentImageIndex = index;
+                showCurrentImage();
+            });
+            lightboxTabs.appendChild(tab);
+        });
+    }
+
+    function updateActiveTabs() {
+        if (!lightboxTabs) return;
+        var tabs = lightboxTabs.querySelectorAll('.lightbox__tab');
+        tabs.forEach(function(tab, index) {
+            tab.classList.toggle('lightbox__tab--active', index === currentImageIndex);
+        });
+    }
+
+    function preloadImages() {
+        var project = lightboxProjects[currentProjectIndex];
+        if (!project) return;
+        project.images.forEach(function(img) { new Image().src = img.src; });
+        var prev = lightboxProjects[(currentProjectIndex - 1 + lightboxProjects.length) % lightboxProjects.length];
+        var next = lightboxProjects[(currentProjectIndex + 1) % lightboxProjects.length];
+        if (prev && prev.images[0]) new Image().src = prev.images[0].src;
+        if (next && next.images[0]) new Image().src = next.images[0].src;
+    }
+
+    function prevProject() {
+        currentProjectIndex = (currentProjectIndex - 1 + lightboxProjects.length) % lightboxProjects.length;
+        currentImageIndex = 0;
+        showCurrentImage();
+        renderTabs();
+    }
+
+    function nextProject() {
+        currentProjectIndex = (currentProjectIndex + 1) % lightboxProjects.length;
+        currentImageIndex = 0;
+        showCurrentImage();
+        renderTabs();
+    }
+
+    function nextImageInProject() {
+        var project = lightboxProjects[currentProjectIndex];
+        if (project && project.images.length > 1) {
+            currentImageIndex = (currentImageIndex + 1) % project.images.length;
+            showCurrentImage();
         }
-        // Preload adjacent
-        var prev = (currentIndex - 1 + allCategoryImages.length) % allCategoryImages.length;
-        var next = (currentIndex + 1) % allCategoryImages.length;
-        if (allCategoryImages[prev]) { var p = new Image(); p.src = allCategoryImages[prev].src; }
-        if (allCategoryImages[next]) { var n = new Image(); n.src = allCategoryImages[next].src; }
     }
 
-    function prevImage() {
-        currentIndex = (currentIndex - 1 + allCategoryImages.length) % allCategoryImages.length;
-        showImage();
+    function prevImageInProject() {
+        var project = lightboxProjects[currentProjectIndex];
+        if (project && project.images.length > 1) {
+            currentImageIndex = (currentImageIndex - 1 + project.images.length) % project.images.length;
+            showCurrentImage();
+        }
     }
 
-    function nextImage() {
-        currentIndex = (currentIndex + 1) % allCategoryImages.length;
-        showImage();
-    }
-
-    // Event delegation — find index among ALL cards in category
     document.getElementById('projects-grid').addEventListener('click', function(e) {
         var cardImage = e.target.closest('.projects__card-image');
         var moreBtn = e.target.closest('.projects__card-more');
@@ -527,8 +604,8 @@ function initLightbox() {
     });
 
     closeBtn.addEventListener('click', closeLightbox);
-    prevBtn.addEventListener('click', function(e) { e.stopPropagation(); prevImage(); });
-    nextBtn.addEventListener('click', function(e) { e.stopPropagation(); nextImage(); });
+    prevBtn.addEventListener('click', function(e) { e.stopPropagation(); prevProject(); });
+    nextBtn.addEventListener('click', function(e) { e.stopPropagation(); nextProject(); });
 
     lightbox.addEventListener('click', function(e) {
         if (e.target === lightbox) closeLightbox();
@@ -537,19 +614,25 @@ function initLightbox() {
     document.addEventListener('keydown', function(e) {
         if (!lightbox.classList.contains('lightbox--open')) return;
         if (e.key === 'Escape') closeLightbox();
-        if (e.key === 'ArrowLeft') prevImage();
-        if (e.key === 'ArrowRight') nextImage();
+        if (e.key === 'ArrowLeft') prevProject();
+        if (e.key === 'ArrowRight') nextProject();
+        if (e.key === 'ArrowUp') { e.preventDefault(); prevImageInProject(); }
+        if (e.key === 'ArrowDown') { e.preventDefault(); nextImageInProject(); }
     });
 
-    // Touch swipe
     var touchStartX = 0;
+    var touchStartY = 0;
     lightbox.addEventListener('touchstart', function(e) {
         touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
     }, { passive: true });
     lightbox.addEventListener('touchend', function(e) {
-        var diff = touchStartX - e.changedTouches[0].screenX;
-        if (Math.abs(diff) > 50) {
-            if (diff > 0) nextImage(); else prevImage();
+        var diffX = touchStartX - e.changedTouches[0].screenX;
+        var diffY = touchStartY - e.changedTouches[0].screenY;
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+            if (diffX > 0) nextProject(); else prevProject();
+        } else if (Math.abs(diffY) > 50) {
+            if (diffY > 0) nextImageInProject(); else prevImageInProject();
         }
     }, { passive: true });
 }
