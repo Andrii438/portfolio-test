@@ -167,6 +167,7 @@ var translations = {
         projectsHeadline: 'PROJECTS',
         projectsFilters: ['Logos', 'Illustrations', 'Social media', 'Print ads'],
         projectsSeeMore: 'See more projects',
+        projectsSeeLess: 'See less',
         projectsCardMore: 'more',
         contactHeadline: 'CONTACT'
     },
@@ -186,12 +187,16 @@ var translations = {
         projectsHeadline: 'PROJEKTY',
         projectsFilters: ['Logotypy', 'Ilustracje', 'Media spo\u0142eczno\u015Bciowe', 'Reklamy drukowane'],
         projectsSeeMore: 'Zobacz wi\u0119cej projekt\u00F3w',
+        projectsSeeLess: 'Zobacz mniej',
         projectsCardMore: 'wi\u0119cej',
         contactHeadline: 'KONTAKT'
     }
 };
 
+var currentLang = 'en';
+
 function setLanguage(lang) {
+    currentLang = lang;
     var t = translations[lang];
     if (!t) return;
 
@@ -253,7 +258,7 @@ function setLanguage(lang) {
     for (var j = 0; j < stickyFilters.length && j < t.projectsFilters.length; j++) {
         stickyFilters[j].textContent = t.projectsFilters[j];
     }
-    if (projSeeMore) projSeeMore.textContent = t.projectsSeeMore;
+    if (projSeeMore) projSeeMore.textContent = allShownFlag ? t.projectsSeeLess : t.projectsSeeMore;
     var cardMoreBtns = document.querySelectorAll('.projects__card-more');
     for (var j = 0; j < cardMoreBtns.length; j++) {
         cardMoreBtns[j].textContent = t.projectsCardMore;
@@ -329,11 +334,52 @@ function initNavActiveState() {
     updateActiveOnScroll();
 }
 
+var currentFilter = 'logos';
+var allShownFlag = false;
+
+function filterProjects() {
+    var projectsGrid = document.getElementById('projects-grid');
+    if (!projectsGrid) return;
+    var allCards = projectsGrid.querySelectorAll('.projects__card');
+    var isMobile = window.innerWidth <= 768;
+    var limit = isMobile ? 3 : 6;
+    var visibleCount = 0;
+
+    allCards.forEach(function(card) {
+        var category = card.getAttribute('data-category');
+        if (category === currentFilter) {
+            if (allShownFlag || visibleCount < limit) {
+                card.classList.remove('projects__card--hidden');
+                visibleCount++;
+            } else {
+                card.classList.add('projects__card--hidden');
+            }
+        } else {
+            card.classList.add('projects__card--hidden');
+        }
+    });
+
+    // Update see more button
+    var seeMoreBtn = document.getElementById('see-more-btn');
+    if (!seeMoreBtn) return;
+    var totalInCategory = projectsGrid.querySelectorAll('.projects__card[data-category="' + currentFilter + '"]').length;
+    if (totalInCategory <= limit) {
+        seeMoreBtn.style.display = 'none';
+    } else {
+        seeMoreBtn.style.display = '';
+        seeMoreBtn.textContent = allShownFlag
+            ? translations[currentLang].projectsSeeLess
+            : translations[currentLang].projectsSeeMore;
+    }
+}
+
 function initProjectFilters() {
     var allFilters = document.querySelectorAll('.projects__filter');
     for (var i = 0; i < allFilters.length; i++) {
         allFilters[i].addEventListener('click', function() {
             var category = this.getAttribute('data-category');
+            currentFilter = category;
+            allShownFlag = false;
             for (var j = 0; j < allFilters.length; j++) {
                 if (allFilters[j].getAttribute('data-category') === category) {
                     allFilters[j].classList.add('projects__filter--active');
@@ -341,8 +387,11 @@ function initProjectFilters() {
                     allFilters[j].classList.remove('projects__filter--active');
                 }
             }
+            filterProjects();
         });
     }
+    // Apply initial filter
+    filterProjects();
 }
 
 function initStickyFilters() {
@@ -401,6 +450,111 @@ function initMobileMenu() {
     }
 }
 
+function initLightbox() {
+    var lightbox = document.getElementById('lightbox');
+    var lightboxImage = document.getElementById('lightbox-image');
+    var lightboxCaption = document.getElementById('lightbox-caption');
+    var closeBtn = document.getElementById('lightbox-close');
+    var prevBtn = document.getElementById('lightbox-prev');
+    var nextBtn = document.getElementById('lightbox-next');
+    var currentImages = [];
+    var currentIndex = 0;
+    if (!lightbox) return;
+
+    function updateImageList() {
+        var visibleCards = document.querySelectorAll('.projects__card:not(.projects__card--hidden)');
+        currentImages = [];
+        visibleCards.forEach(function(card) {
+            var img = card.querySelector('.projects__card-image img');
+            if (img) {
+                currentImages.push({ src: img.src, alt: img.alt });
+            }
+        });
+    }
+
+    function openLightbox(index) {
+        updateImageList();
+        currentIndex = index;
+        showImage();
+        lightbox.classList.add('lightbox--open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        lightbox.classList.remove('lightbox--open');
+        document.body.style.overflow = '';
+    }
+
+    function showImage() {
+        if (currentImages[currentIndex]) {
+            lightboxImage.src = currentImages[currentIndex].src;
+            lightboxImage.alt = currentImages[currentIndex].alt;
+            lightboxCaption.textContent = currentImages[currentIndex].alt;
+        }
+    }
+
+    function prevImage() {
+        currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+        showImage();
+    }
+
+    function nextImage() {
+        currentIndex = (currentIndex + 1) % currentImages.length;
+        showImage();
+    }
+
+    // Event delegation for dynamically filtered cards
+    document.getElementById('projects-grid').addEventListener('click', function(e) {
+        var cardImage = e.target.closest('.projects__card-image');
+        var moreBtn = e.target.closest('.projects__card-more');
+        if (cardImage || moreBtn) {
+            var card = e.target.closest('.projects__card');
+            if (card && !card.classList.contains('projects__card--hidden')) {
+                var visibleCards = document.querySelectorAll('.projects__card:not(.projects__card--hidden)');
+                var index = Array.from(visibleCards).indexOf(card);
+                if (index >= 0) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openLightbox(index);
+                }
+            }
+        }
+    });
+
+    closeBtn.addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', function(e) { e.stopPropagation(); prevImage(); });
+    nextBtn.addEventListener('click', function(e) { e.stopPropagation(); nextImage(); });
+
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (!lightbox.classList.contains('lightbox--open')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') prevImage();
+        if (e.key === 'ArrowRight') nextImage();
+    });
+}
+
+function initLoadMore() {
+    var seeMoreBtn = document.getElementById('see-more-btn');
+    if (!seeMoreBtn) return;
+
+    seeMoreBtn.addEventListener('click', function() {
+        if (allShownFlag) {
+            allShownFlag = false;
+        } else {
+            allShownFlag = true;
+        }
+        filterProjects();
+    });
+
+    window.addEventListener('resize', function() {
+        if (!allShownFlag) filterProjects();
+    });
+}
+
 if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(function() {
         positionLayout();
@@ -409,6 +563,8 @@ if (document.fonts && document.fonts.ready) {
         initProjectFilters();
         initStickyFilters();
         initMobileMenu();
+        initLightbox();
+        initLoadMore();
     });
 } else {
     window.addEventListener('load', function() {
@@ -418,6 +574,8 @@ if (document.fonts && document.fonts.ready) {
         initProjectFilters();
         initStickyFilters();
         initMobileMenu();
+        initLightbox();
+        initLoadMore();
     });
 }
 window.addEventListener('resize', positionLayout);
