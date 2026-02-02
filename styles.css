@@ -268,7 +268,7 @@ a {
    ============================================ */
 .about {
     position: relative;
-    padding: 10vh 3.125vw;
+    padding: 10vh 3.125vw 6vh;
     overflow: hidden;
 }
 
@@ -283,7 +283,7 @@ a {
     flex: 0 0 42%;
     position: relative;
     /* Reserve space for the photo's translateY overflow */
-    padding-top: 14vw;
+    padding-top: 15vw;
 }
 
 /* Upper red block — behind top-left of photo, bleeds to section edge */
@@ -292,6 +292,7 @@ a {
     top: 0;
     left: -3.125vw;
     width: 70%;
+    height: 55%;
     aspect-ratio: 956 / 552;
     background-color: var(--color-red);
     z-index: 1;
