@@ -738,26 +738,31 @@ a {
         z-index: 2;
     }
 
-    /* Quote - centered, below the small red rectangle */
+    /* Quote - block on right side, text left-aligned inside */
     .hero__quote {
         font-size: 14px;
         white-space: normal;
-        text-align: center;
-        width: 100%;
-        margin-top: 35vw;
-        margin-bottom: 20vw;
+        text-align: left;
+        width: auto;
+        max-width: 70%;
+        margin-left: auto;
+        margin-right: 20px;
+        margin-top: 30vw;
+        margin-bottom: 15vw;
+        padding: 0;
         left: auto !important;
         top: auto !important;
+        box-sizing: border-box;
     }
 
     .hero__quote-line {
         display: block;
-        text-align: center;
+        text-align: left;
     }
 
     #span-design-is,
     #span-its-a-way {
-        text-align: center;
+        text-align: left;
         width: auto !important;
         display: inline;
     }
@@ -771,14 +776,15 @@ a {
     /* Headline - below quote, left-aligned */
     .hero__headline {
         position: relative;
+        z-index: 2;
         bottom: auto;
         left: auto;
         font-size: clamp(28px, 9vw, 42px);
         line-height: 1.1;
         text-align: left;
         white-space: normal;
-        margin-top: 0;
-        margin-bottom: 20px;
+        margin-top: 25px;
+        margin-bottom: 0;
     }
 
     .hero__headline--pl {
@@ -797,12 +803,15 @@ a {
         margin-right: 8px;
     }
 
-    /* Author - below headline, left-aligned */
+    /* Author - pushed to very bottom of viewport */
     .hero__author {
         position: relative;
+        z-index: 2;
         right: auto;
         top: auto !important;
         align-items: flex-start;
+        margin-top: auto;
+        padding-bottom: 20px;
     }
 
     .hero__author-name {

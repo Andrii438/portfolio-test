@@ -23,20 +23,38 @@ function positionLayout() {
         var author = document.querySelector('.hero__author');
         if (author) author.style.top = '';
 
-        // Position red block: starts at DESIGN, extends to right edge, tall rectangle
+        // Position red block: only DESIGN overlaps, not quote or other text
         var h = hero.getBoundingClientRect();
         var d = spanD.getBoundingClientRect();
         var spanG = document.getElementById('span-graphic');
+        var quoteEl = document.querySelector('.hero__quote');
+
         var gRight = spanG ? spanG.getBoundingClientRect().right : d.left;
+        var quoteBottom = quoteEl ? quoteEl.getBoundingClientRect().bottom : 0;
+
+        // Left: just after GRAPHIC
         var padLeft = Math.max(d.left - gRight - 2, 0);
         var blockLeft = d.left - h.left - padLeft;
-        var blockWidth = h.width - blockLeft; // extend to right edge
-        var blockHeight = d.height * 2.5;
-        // Center block vertically on DESIGN, clamp to headline top
-        var headline = document.getElementById('headline');
-        var headlineTop = headline ? headline.getBoundingClientRect().top - h.top : d.top - h.top;
-        var blockTop = d.top - h.top - (blockHeight - d.height) / 2;
-        if (blockTop < headlineTop) blockTop = headlineTop;
+
+        // Width: leave 20px right margin (not touching edge)
+        var blockWidth = h.width - blockLeft - 20;
+
+        // Block bottom: only 8px below DESIGN so & ILLUSTRATION doesn't touch
+        var blockBottom = d.bottom - h.top + 3;
+
+        // Top: below quote
+        var minTop = quoteBottom - h.top + 15;
+
+        // Height spans from minTop to blockBottom
+        var blockHeight = blockBottom - minTop;
+        var blockTop = minTop;
+
+        // Ensure minimum height covers DESIGN
+        if (blockHeight < d.height * 1.5) {
+            blockHeight = d.height * 2;
+            blockTop = blockBottom - blockHeight;
+            if (blockTop < minTop) blockTop = minTop;
+        }
 
         block.style.left   = blockLeft + 'px';
         block.style.top    = blockTop + 'px';
