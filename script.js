@@ -258,7 +258,7 @@ function setLanguage(lang) {
     for (var j = 0; j < stickyFilters.length && j < t.projectsFilters.length; j++) {
         stickyFilters[j].textContent = t.projectsFilters[j];
     }
-    if (projSeeMore) projSeeMore.textContent = allShownFlag ? t.projectsSeeLess : t.projectsSeeMore;
+    if (projSeeMore && !allShownFlag) projSeeMore.textContent = t.projectsSeeMore;
     var cardMoreBtns = document.querySelectorAll('.projects__card-more');
     for (var j = 0; j < cardMoreBtns.length; j++) {
         cardMoreBtns[j].textContent = t.projectsCardMore;
@@ -363,13 +363,11 @@ function filterProjects() {
     var seeMoreBtn = document.getElementById('see-more-btn');
     if (!seeMoreBtn) return;
     var totalInCategory = projectsGrid.querySelectorAll('.projects__card[data-category="' + currentFilter + '"]').length;
-    if (totalInCategory <= limit) {
+    if (allShownFlag || totalInCategory <= limit) {
         seeMoreBtn.style.display = 'none';
     } else {
         seeMoreBtn.style.display = '';
-        seeMoreBtn.textContent = allShownFlag
-            ? translations[currentLang].projectsSeeLess
-            : translations[currentLang].projectsSeeMore;
+        seeMoreBtn.textContent = translations[currentLang].projectsSeeMore;
     }
 }
 
@@ -454,27 +452,28 @@ function initLightbox() {
     var lightbox = document.getElementById('lightbox');
     var lightboxImage = document.getElementById('lightbox-image');
     var lightboxCaption = document.getElementById('lightbox-caption');
+    var lightboxCounter = document.getElementById('lightbox-counter');
     var closeBtn = document.getElementById('lightbox-close');
     var prevBtn = document.getElementById('lightbox-prev');
     var nextBtn = document.getElementById('lightbox-next');
-    var currentImages = [];
+    var allCategoryImages = [];
     var currentIndex = 0;
     if (!lightbox) return;
 
     function updateImageList() {
-        var visibleCards = document.querySelectorAll('.projects__card:not(.projects__card--hidden)');
-        currentImages = [];
-        visibleCards.forEach(function(card) {
+        var allCards = document.querySelectorAll('.projects__card[data-category="' + currentFilter + '"]');
+        allCategoryImages = [];
+        allCards.forEach(function(card) {
             var img = card.querySelector('.projects__card-image img');
             if (img) {
-                currentImages.push({ src: img.src, alt: img.alt });
+                allCategoryImages.push({ src: img.src, alt: img.alt });
             }
         });
     }
 
     function openLightbox(index) {
         updateImageList();
-        currentIndex = index;
+        currentIndex = (index >= 0 && index < allCategoryImages.length) ? index : 0;
         showImage();
         lightbox.classList.add('lightbox--open');
         document.body.style.overflow = 'hidden';
@@ -486,37 +485,43 @@ function initLightbox() {
     }
 
     function showImage() {
-        if (currentImages[currentIndex]) {
-            lightboxImage.src = currentImages[currentIndex].src;
-            lightboxImage.alt = currentImages[currentIndex].alt;
-            lightboxCaption.textContent = currentImages[currentIndex].alt;
+        if (allCategoryImages[currentIndex]) {
+            lightboxImage.src = allCategoryImages[currentIndex].src;
+            lightboxImage.alt = allCategoryImages[currentIndex].alt;
+            lightboxCaption.textContent = allCategoryImages[currentIndex].alt;
         }
+        if (lightboxCounter) {
+            lightboxCounter.textContent = (currentIndex + 1) + ' / ' + allCategoryImages.length;
+        }
+        // Preload adjacent
+        var prev = (currentIndex - 1 + allCategoryImages.length) % allCategoryImages.length;
+        var next = (currentIndex + 1) % allCategoryImages.length;
+        if (allCategoryImages[prev]) { var p = new Image(); p.src = allCategoryImages[prev].src; }
+        if (allCategoryImages[next]) { var n = new Image(); n.src = allCategoryImages[next].src; }
     }
 
     function prevImage() {
-        currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+        currentIndex = (currentIndex - 1 + allCategoryImages.length) % allCategoryImages.length;
         showImage();
     }
 
     function nextImage() {
-        currentIndex = (currentIndex + 1) % currentImages.length;
+        currentIndex = (currentIndex + 1) % allCategoryImages.length;
         showImage();
     }
 
-    // Event delegation for dynamically filtered cards
+    // Event delegation — find index among ALL cards in category
     document.getElementById('projects-grid').addEventListener('click', function(e) {
         var cardImage = e.target.closest('.projects__card-image');
         var moreBtn = e.target.closest('.projects__card-more');
         if (cardImage || moreBtn) {
             var card = e.target.closest('.projects__card');
-            if (card && !card.classList.contains('projects__card--hidden')) {
-                var visibleCards = document.querySelectorAll('.projects__card:not(.projects__card--hidden)');
-                var index = Array.from(visibleCards).indexOf(card);
-                if (index >= 0) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    openLightbox(index);
-                }
+            if (card && card.getAttribute('data-category') === currentFilter) {
+                e.preventDefault();
+                e.stopPropagation();
+                var allInCategory = document.querySelectorAll('.projects__card[data-category="' + currentFilter + '"]');
+                var index = Array.from(allInCategory).indexOf(card);
+                if (index >= 0) openLightbox(index);
             }
         }
     });
@@ -535,6 +540,18 @@ function initLightbox() {
         if (e.key === 'ArrowLeft') prevImage();
         if (e.key === 'ArrowRight') nextImage();
     });
+
+    // Touch swipe
+    var touchStartX = 0;
+    lightbox.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    lightbox.addEventListener('touchend', function(e) {
+        var diff = touchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) nextImage(); else prevImage();
+        }
+    }, { passive: true });
 }
 
 function initLoadMore() {
@@ -542,12 +559,9 @@ function initLoadMore() {
     if (!seeMoreBtn) return;
 
     seeMoreBtn.addEventListener('click', function() {
-        if (allShownFlag) {
-            allShownFlag = false;
-        } else {
-            allShownFlag = true;
-        }
+        allShownFlag = true;
         filterProjects();
+        seeMoreBtn.style.display = 'none';
     });
 
     window.addEventListener('resize', function() {

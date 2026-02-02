@@ -8,7 +8,7 @@
     --color-bg: #F5F5F5;
     --color-red-hover: #F96161;
     --color-header-bg: #E8E8E8;
-    --font-family: 'Inter', sans-serif;
+    --font-family: 'Inter', semi-bold;
 }
 
 /* ============================================
@@ -694,6 +694,14 @@ a {
     color: white;
 }
 
+.lightbox__counter {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: 500;
+}
+
 /* ============================================
    Hamburger (hidden on desktop)
    ============================================ */
@@ -1025,7 +1033,16 @@ a {
     }
 
     .projects__filters-sticky {
-        display: none !important;
+        top: 48px;
+        padding: 10px 20px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .projects__filters-sticky .projects__filter {
+        padding: 8px 12px;
+        font-size: 11px;
     }
 
     /* --- Lightbox mobile --- */
