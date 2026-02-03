@@ -1,6 +1,19 @@
 /**
  * Grid-spine "Vertical Pillar" positioning + language switching.
  */
+
+// Debounce utility for performance optimization
+function debounce(func, wait) {
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(function() {
+            func.apply(context, args);
+        }, wait);
+    };
+}
+
 function positionLayout() {
     var hero    = document.getElementById('hero');
     var block   = document.getElementById('red-block');
@@ -637,6 +650,19 @@ function initLightbox() {
     }, { passive: true });
 }
 
+function initImageLoading() {
+    var lazyImages = document.querySelectorAll('img[loading="lazy"]');
+    lazyImages.forEach(function(img) {
+        if (img.complete) {
+            img.classList.add('loaded');
+        } else {
+            img.addEventListener('load', function() {
+                img.classList.add('loaded');
+            });
+        }
+    });
+}
+
 function initLoadMore() {
     var seeMoreBtn = document.getElementById('see-more-btn');
     if (!seeMoreBtn) return;
@@ -662,6 +688,7 @@ if (document.fonts && document.fonts.ready) {
         initMobileMenu();
         initLightbox();
         initLoadMore();
+        initImageLoading();
     });
 } else {
     window.addEventListener('load', function() {
@@ -673,6 +700,7 @@ if (document.fonts && document.fonts.ready) {
         initMobileMenu();
         initLightbox();
         initLoadMore();
+        initImageLoading();
     });
 }
-window.addEventListener('resize', positionLayout);
+window.addEventListener('resize', debounce(positionLayout, 100));

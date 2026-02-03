@@ -8,7 +8,7 @@
     --color-bg: #F5F5F5;
     --color-red-hover: #F96161;
     --color-header-bg: #E8E8E8;
-    --font-family: 'Inter', semi-bold;
+    --font-family: 'Inter', sans-serif;
 }
 
 /* ============================================
@@ -20,9 +20,39 @@
     box-sizing: border-box;
 }
 
+/* Skip link for accessibility */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-red);
+    color: var(--color-white);
+    padding: 8px 16px;
+    z-index: 1000;
+    font-weight: 600;
+    transition: top 0.3s;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
 html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+}
+
+/* Focus states for accessibility */
+:focus-visible {
+    outline: 2px solid var(--color-red);
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--color-red);
+    outline-offset: 2px;
 }
 
 body {
@@ -99,6 +129,14 @@ a {
     font-size: clamp(14px, 1.35vw, 26px);
     font-weight: 500;
 }
+.header__lang-btn {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+}
+
 .header__lang-active,
 .header__lang-inactive {
     position: relative;
@@ -422,6 +460,12 @@ a {
 
 .projects__card {
     position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.projects__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 .projects__card-image {
@@ -437,7 +481,16 @@ a {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.projects__card-image img[loading="lazy"] {
+    opacity: 0;
+}
+
+.projects__card-image img.loaded,
+.projects__card-image img:not([loading="lazy"]) {
+    opacity: 1;
 }
 
 .projects__card-image:hover img {
@@ -1171,5 +1224,63 @@ a {
     .contact__social-icon {
         width: 24px;
         height: 24px;
+    }
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+@media print {
+    .header,
+    .projects__filters-sticky,
+    .mobile-menu,
+    .lightbox,
+    .projects__card-more,
+    .projects__see-more,
+    .skip-link {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    .hero {
+        margin-top: 0;
+        height: auto;
+        min-height: auto;
+        page-break-after: always;
+    }
+
+    .hero__red-block,
+    .hero__red-square {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .about,
+    .projects,
+    .contact {
+        padding: 40px 20px;
+        page-break-inside: avoid;
+    }
+
+    .projects__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .projects__card--hidden {
+        display: block !important;
+    }
+
+    a[href]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #666;
+    }
+
+    .contact__social-link::after {
+        content: none;
     }
 }
