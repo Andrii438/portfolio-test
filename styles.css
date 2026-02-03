@@ -311,14 +311,19 @@ a {
 }
 
 .about__content {
-    display: flex;
-    align-items: flex-start;
-    gap: 5vw;
+    display: grid;
+    grid-template-columns: 42% 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "image headline"
+        "image text";
+    gap: 0 5vw;
+    align-items: start;
 }
 
 /* Left column */
 .about__image-col {
-    flex: 0 0 42%;
+    grid-area: image;
     position: relative;
     /* Reserve space for the photo's translateY overflow */
     padding-top: 15vw;
@@ -365,13 +370,14 @@ a {
 
 /* Right column — text */
 .about__text-col {
-    flex: 1;
+    grid-area: text;
     z-index: 3;
     display: flex;
     flex-direction: column;
 }
 
 .about__headline {
+    grid-area: headline;
     font-family: var(--font-family);
     font-size: clamp(50px, 8.5vw, 160px);
     font-weight: 900;
@@ -381,6 +387,7 @@ a {
     margin-top: 6vw;
     margin-bottom: 0;
     white-space: nowrap;
+    z-index: 3;
 }
 
 .about__body-wrap {
@@ -1044,13 +1051,28 @@ a {
     }
 
     .about__content {
-        flex-direction: column;
-        align-items: center;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "headline"
+            "image"
+            "text";
         gap: 30px;
     }
 
+    .about__headline {
+        grid-area: headline;
+        justify-self: end;
+        width: auto;
+        font-size: clamp(36px, 12vw, 56px);
+        margin-left: 0;
+        margin-top: 0;
+        white-space: nowrap;
+    }
+
     .about__image-col {
-        flex: none;
+        grid-area: image;
+        justify-self: center;
         width: 100%;
         padding-top: 8vw;
     }
@@ -1067,21 +1089,15 @@ a {
     }
 
     .about__text-col {
+        grid-area: text;
+        justify-self: center;
         width: 100%;
         text-align: center;
         align-items: center;
     }
 
-    .about__headline {
-        font-size: clamp(36px, 12vw, 56px);
-        margin-left: 0;
-        margin-top: 0;
-        text-align: center;
-        white-space: normal;
-    }
-
     .about__body-wrap {
-        margin-top: 20px;
+        margin-top: 0;
     }
 
     .about__body {
