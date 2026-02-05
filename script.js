@@ -182,6 +182,7 @@ var translations = {
         projectsSeeMore: 'See more projects',
         projectsSeeLess: 'See less',
         projectsCardMore: 'more',
+        projectsSubFilters: ['All', 'Branding', 'Posters', 'Materials'],
         contactHeadline: 'CONTACT'
     },
     pl: {
@@ -202,6 +203,7 @@ var translations = {
         projectsSeeMore: 'Zobacz wi\u0119cej projekt\u00F3w',
         projectsSeeLess: 'Zobacz mniej',
         projectsCardMore: 'wi\u0119cej',
+        projectsSubFilters: ['Wszystko', 'Branding', 'Plakaty', 'Materia\u0142y'],
         contactHeadline: 'KONTAKT'
     }
 };
@@ -272,6 +274,10 @@ function setLanguage(lang) {
         stickyFilters[j].textContent = t.projectsFilters[j];
     }
     if (projSeeMore && !allShownFlag) projSeeMore.textContent = t.projectsSeeMore;
+    var projSubFilters = document.querySelectorAll('#projects-subfilters .projects__subfilter');
+    for (var j = 0; j < projSubFilters.length && j < t.projectsSubFilters.length; j++) {
+        projSubFilters[j].textContent = t.projectsSubFilters[j];
+    }
     var cardMoreBtns = document.querySelectorAll('.projects__card-more');
     for (var j = 0; j < cardMoreBtns.length; j++) {
         cardMoreBtns[j].textContent = t.projectsCardMore;
@@ -348,6 +354,7 @@ function initNavActiveState() {
 }
 
 var currentFilter = 'logos';
+var currentSubFilter = 'all';
 var allShownFlag = false;
 
 function filterProjects() {
@@ -360,7 +367,10 @@ function filterProjects() {
 
     allCards.forEach(function(card) {
         var category = card.getAttribute('data-category');
-        if (category === currentFilter) {
+        var subcategory = card.getAttribute('data-subcategory');
+        var matchesCategory = category === currentFilter;
+        var matchesSub = currentSubFilter === 'all' || !subcategory || subcategory === currentSubFilter;
+        if (matchesCategory && matchesSub) {
             if (allShownFlag || visibleCount < limit) {
                 card.classList.remove('projects__card--hidden');
                 visibleCount++;
@@ -372,24 +382,54 @@ function filterProjects() {
         }
     });
 
+    // Show/hide sub-filters
+    var subfilters = document.getElementById('projects-subfilters');
+    if (subfilters) {
+        if (currentFilter === 'print-ads') {
+            subfilters.classList.add('projects__subfilters--visible');
+        } else {
+            subfilters.classList.remove('projects__subfilters--visible');
+        }
+    }
+
     // Update see more button
     var seeMoreBtn = document.getElementById('see-more-btn');
     if (!seeMoreBtn) return;
-    var totalInCategory = projectsGrid.querySelectorAll('.projects__card[data-category="' + currentFilter + '"]').length;
-    if (allShownFlag || totalInCategory <= limit) {
+    var matchingCards = 0;
+    allCards.forEach(function(card) {
+        var category = card.getAttribute('data-category');
+        var subcategory = card.getAttribute('data-subcategory');
+        var matchesSub = currentSubFilter === 'all' || !subcategory || subcategory === currentSubFilter;
+        if (category === currentFilter && matchesSub) matchingCards++;
+    });
+    if (allShownFlag || matchingCards <= limit) {
         seeMoreBtn.style.display = 'none';
     } else {
         seeMoreBtn.style.display = '';
         seeMoreBtn.textContent = translations[currentLang].projectsSeeMore;
     }
+
+}
+
+function scrollToProjects() {
+    var filters = document.querySelector('.projects__filters');
+    var header = document.querySelector('.header');
+    if (filters) {
+        var headerHeight = header ? header.offsetHeight : 0;
+        var top = filters.getBoundingClientRect().top + window.scrollY - headerHeight;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+    }
 }
 
 function initProjectFilters() {
     var allFilters = document.querySelectorAll('.projects__filter');
+    var allSubFilters = document.querySelectorAll('.projects__subfilter');
+
     for (var i = 0; i < allFilters.length; i++) {
         allFilters[i].addEventListener('click', function() {
             var category = this.getAttribute('data-category');
             currentFilter = category;
+            currentSubFilter = 'all';
             allShownFlag = false;
             for (var j = 0; j < allFilters.length; j++) {
                 if (allFilters[j].getAttribute('data-category') === category) {
@@ -398,9 +438,29 @@ function initProjectFilters() {
                     allFilters[j].classList.remove('projects__filter--active');
                 }
             }
+            // Reset sub-filter active state
+            for (var k = 0; k < allSubFilters.length; k++) {
+                allSubFilters[k].classList.toggle('projects__subfilter--active',
+                    allSubFilters[k].getAttribute('data-subcategory') === 'all');
+            }
             filterProjects();
+            scrollToProjects();
         });
     }
+
+    for (var i = 0; i < allSubFilters.length; i++) {
+        allSubFilters[i].addEventListener('click', function() {
+            currentSubFilter = this.getAttribute('data-subcategory');
+            allShownFlag = false;
+            for (var k = 0; k < allSubFilters.length; k++) {
+                allSubFilters[k].classList.toggle('projects__subfilter--active',
+                    allSubFilters[k].getAttribute('data-subcategory') === currentSubFilter);
+            }
+            filterProjects();
+            scrollToProjects();
+        });
+    }
+
     // Apply initial filter
     filterProjects();
 }

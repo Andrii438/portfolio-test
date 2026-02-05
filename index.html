@@ -94,7 +94,7 @@
             <div class="about__image-col">
                 <div class="about__red-upper"></div>
                 <div class="about__photo-frame">
-                    <img src="asset/about_me.png" alt="Valeriia Kozinna" class="about__photo" />
+                    <img src="asset/about-me.png" alt="Valeriia Kozinna" class="about__photo" />
                     <div class="about__red-lower"></div>
                 </div>
             </div>
@@ -116,6 +116,13 @@
             <button class="projects__filter" data-category="print-ads">Print ads</button>
         </div>
 
+        <div class="projects__subfilters" id="projects-subfilters">
+            <button class="projects__subfilter projects__subfilter--active" data-subcategory="all">All</button>
+            <button class="projects__subfilter" data-subcategory="branding">Branding</button>
+            <button class="projects__subfilter" data-subcategory="posters">Posters</button>
+            <button class="projects__subfilter" data-subcategory="materials">Materials</button>
+        </div>
+
         <div class="projects__grid" id="projects-grid">
             <div class="projects__card" data-category="logos">
                 <div class="projects__card-image">
@@ -123,21 +130,23 @@
                 </div>
                 <button class="projects__card-more">more</button>
             </div>
-            <div class="projects__card" data-category="logos">
+            <div class="projects__card"
+                 data-category="logos"
+                 data-images='[{"src":"asset/logos/francy.png","label":"Logo","alt":"Francy Logo"},{"src":"asset/print-ads/francy-bag.png","label":"Bag","alt":"Francy - Bag Design"},{"src":"asset/print-ads/francy-label.png","label":"Label","alt":"Francy - Label Design"},{"src":"asset/print-ads/francy-mockup.png","label":"Mockup","alt":"Francy - Brand Mockup"}]'>
                 <div class="projects__card-image">
-                    <img src="asset/logos/Frame 496 (1).png" alt="Logo Design" loading="lazy">
+                    <img src="asset/logos/francy.png" alt="Francy Logo" loading="lazy">
                 </div>
                 <button class="projects__card-more">more</button>
             </div>
             <div class="projects__card" data-category="logos">
                 <div class="projects__card-image">
-                    <img src="asset/logos/Frame 496.png" alt="Logo Design" loading="lazy">
+                    <img src="asset/logos/frame-496.png" alt="Logo Design" loading="lazy">
                 </div>
                 <button class="projects__card-more">more</button>
             </div>
             <div class="projects__card" data-category="logos">
                 <div class="projects__card-image">
-                    <img src="asset/logos/golden peacock.png" alt="Golden Peacock Logo" loading="lazy">
+                    <img src="asset/logos/golden-peacock.png" alt="Golden Peacock Logo" loading="lazy">
                 </div>
                 <button class="projects__card-more">more</button>
             </div>
@@ -149,7 +158,7 @@
             </div>
             <div class="projects__card" data-category="logos">
                 <div class="projects__card-image">
-                    <img src="asset/logos/la pasta 2@2x-100.jpg" alt="La Pasta Logo" loading="lazy">
+                    <img src="asset/logos/la-pasta.jpg" alt="La Pasta Logo" loading="lazy">
                 </div>
                 <button class="projects__card-more">more</button>
             </div>
@@ -181,6 +190,60 @@
                  data-images='[{"src":"asset/illustrations/cosmic-journey/illustration.png","label":"Artwork","alt":"Cosmic Journey - Children&#39;s Book Illustration"},{"src":"asset/illustrations/cosmic-journey/book-mockup.png","label":"In Context","alt":"Cosmic Journey - Book Mockup"}]'>
                 <div class="projects__card-image">
                     <img src="asset/illustrations/cosmic-journey/illustration.png" alt="Cosmic Journey - Children's Book Illustration" loading="lazy">
+                </div>
+                <button class="projects__card-more">more</button>
+            </div>
+
+            <div class="projects__card"
+                 data-category="social-media"
+                 data-images='[{"src":"asset/social-media/instalift.png","label":"Design","alt":"Instalift - Social Media Design"},{"src":"asset/social-media/instalift-mockup.png","label":"Mockup","alt":"Instalift - Social Media Mockup"}]'>
+                <div class="projects__card-image">
+                    <img src="asset/social-media/instalift.png" alt="Instalift - Social Media Design" loading="lazy">
+                </div>
+                <button class="projects__card-more">more</button>
+            </div>
+            <div class="projects__card"
+                 data-category="social-media"
+                 data-images='[{"src":"asset/social-media/bottle-design.jpg","label":"Design","alt":"Bottle - Product Design"},{"src":"asset/social-media/bus-station.jpg","label":"In Context","alt":"Bottle - Bus Station Advertisement"}]'>
+                <div class="projects__card-image">
+                    <img src="asset/social-media/bottle-design.jpg" alt="Bottle - Product Design" loading="lazy">
+                </div>
+                <button class="projects__card-more">more</button>
+            </div>
+
+            <div class="projects__card"
+                 data-category="print-ads"
+                 data-subcategory="branding"
+                 data-images='[{"src":"asset/print-ads/francy-bag.png","label":"Bag","alt":"Francy - Bag Design"},{"src":"asset/print-ads/francy-label.png","label":"Label","alt":"Francy - Label Design"},{"src":"asset/print-ads/francy-mockup.png","label":"Mockup","alt":"Francy - Brand Mockup"}]'>
+                <div class="projects__card-image">
+                    <img src="asset/print-ads/francy-mockup.png" alt="Francy - Brand Mockup" loading="lazy">
+                </div>
+                <button class="projects__card-more">more</button>
+            </div>
+            <div class="projects__card"
+                 data-category="print-ads"
+                 data-subcategory="posters"
+                 data-images='[{"src":"asset/print-ads/poster.jpg","label":"Poster","alt":"Poster Design"},{"src":"asset/print-ads/poster-cinema.jpg","label":"Cinema Poster","alt":"Cinema Poster Design"}]'>
+                <div class="projects__card-image projects__card-image--contain">
+                    <img src="asset/print-ads/poster.jpg" alt="Poster Design" loading="lazy">
+                </div>
+                <button class="projects__card-more">more</button>
+            </div>
+            <div class="projects__card" data-category="print-ads" data-subcategory="materials">
+                <div class="projects__card-image">
+                    <img src="asset/print-ads/menu-la-pasta.png" alt="La Pasta - Menu Design" loading="lazy">
+                </div>
+                <button class="projects__card-more">more</button>
+            </div>
+            <div class="projects__card" data-category="print-ads" data-subcategory="materials">
+                <div class="projects__card-image">
+                    <img src="asset/print-ads/certificate.png" alt="Certificate Design" loading="lazy">
+                </div>
+                <button class="projects__card-more">more</button>
+            </div>
+            <div class="projects__card" data-category="print-ads" data-subcategory="materials">
+                <div class="projects__card-image">
+                    <img src="asset/print-ads/price-manicure-pedicure.png" alt="Manicure &amp; Pedicure Price List" loading="lazy">
                 </div>
                 <button class="projects__card-more">more</button>
             </div>
