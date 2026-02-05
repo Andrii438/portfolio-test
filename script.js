@@ -212,6 +212,7 @@ var currentLang = 'en';
 
 function setLanguage(lang) {
     currentLang = lang;
+    document.documentElement.lang = lang;
     var t = translations[lang];
     if (!t) return;
 
@@ -533,12 +534,45 @@ function initLightbox() {
     var lightboxProjects = [];
     var currentProjectIndex = 0;
     var currentImageIndex = 0;
+    var triggerElement = null;
     if (!lightbox) return;
+
+    function getFocusableElements() {
+        var elements = lightbox.querySelectorAll(
+            'button:not([disabled]):not([style*="display: none"]), [href], [tabindex]:not([tabindex="-1"])'
+        );
+        return Array.from(elements).filter(function(el) {
+            return el.offsetParent !== null;
+        });
+    }
+
+    function trapFocus(e) {
+        var focusable = getFocusableElements();
+        if (focusable.length === 0) return;
+        var first = focusable[0];
+        var last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+            if (document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            }
+        } else {
+            if (document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
+        }
+    }
 
     function updateProjectList() {
         var allCards = document.querySelectorAll('.projects__card[data-category="' + currentFilter + '"]');
         lightboxProjects = [];
         allCards.forEach(function(card) {
+            // Respect active sub-filter
+            if (currentSubFilter !== 'all') {
+                var subcategory = card.getAttribute('data-subcategory');
+                if (subcategory && subcategory !== currentSubFilter) return;
+            }
             var project = { images: [] };
             var imagesData = card.getAttribute('data-images');
             if (imagesData) {
@@ -555,6 +589,7 @@ function initLightbox() {
     }
 
     function openLightbox(index) {
+        triggerElement = document.activeElement;
         updateProjectList();
         currentProjectIndex = (index >= 0 && index < lightboxProjects.length) ? index : 0;
         currentImageIndex = 0;
@@ -562,11 +597,16 @@ function initLightbox() {
         renderTabs();
         lightbox.classList.add('lightbox--open');
         document.body.style.overflow = 'hidden';
+        closeBtn.focus();
     }
 
     function closeLightbox() {
         lightbox.classList.remove('lightbox--open');
         document.body.style.overflow = '';
+        if (triggerElement && triggerElement.focus) {
+            triggerElement.focus();
+            triggerElement = null;
+        }
     }
 
     function showCurrentImage() {
@@ -686,6 +726,7 @@ function initLightbox() {
 
     document.addEventListener('keydown', function(e) {
         if (!lightbox.classList.contains('lightbox--open')) return;
+        if (e.key === 'Tab') trapFocus(e);
         if (e.key === 'Escape') closeLightbox();
         if (e.key === 'ArrowLeft') prevProject();
         if (e.key === 'ArrowRight') nextProject();
