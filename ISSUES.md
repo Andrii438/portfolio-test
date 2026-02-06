@@ -93,47 +93,56 @@ Audit date: 2026-02-05
 ### m1. Scroll listener missing `{ passive: true }`
 - **Files:** `script.js:352`
 - **Problem:** `initNavActiveState` scroll listener lacks `{ passive: true }`, unlike `initStickyFilters` (line 489).
-- **Status:** Open
+- **Fix:** Added `{ passive: true }` to scroll listener.
+- **Status:** Fixed
 
 ### m2. No `prefers-reduced-motion` support
 - **Files:** `styles.css` (global)
 - **Problem:** No `@media (prefers-reduced-motion: reduce)` query. All animations play regardless of user OS settings. Violates WCAG 2.3.3.
-- **Status:** Open
+- **Fix:** Added `@media (prefers-reduced-motion: reduce)` that sets all transition/animation durations to near-zero and disables smooth scrolling.
+- **Status:** Fixed
 
 ### m3. Lightbox wraps around silently
 - **Files:** `script.js:634-646`
 - **Problem:** At the last project "next" wraps to first; at first "prev" wraps to last. No visual cue signals the boundary.
-- **Status:** Open
+- **Fix:** Prev/next buttons now hide at boundaries. Navigation stops instead of wrapping.
+- **Status:** Fixed
 
 ### m4. Failed lazy images remain invisible forever
 - **Files:** `styles.css:528-529`, `script.js:713-724`
 - **Problem:** `img[loading="lazy"]` starts at `opacity: 0`. If an image fails to load, it stays invisible while its `#D9D9D9` placeholder container remains.
-- **Status:** Open
+- **Fix:** Added `error` event listener that adds `.loaded` class, making the placeholder container visible.
+- **Status:** Fixed
 
 ### m5. Contact card uses fixed padding
 - **Files:** `styles.css:654`
 - **Problem:** `.contact__card` has `padding: 60px 80px` in fixed pixels. Doesn't scale between 769-1023px viewports.
-- **Status:** Open
+- **Fix:** Changed to `clamp(30px, 4vw, 60px) clamp(30px, 5.5vw, 80px)` for fluid scaling.
+- **Status:** Fixed
 
 ### m6. Language preference not persisted
 - **Files:** `script.js:211`
 - **Problem:** `currentLang` resets to `'en'` on every page load. No `localStorage` or URL parameter persistence.
-- **Status:** Open
+- **Fix:** `setLanguage()` saves to `localStorage`. On init, saved preference is restored.
+- **Status:** Fixed
 
 ### m7. Print styles show redundant URLs
 - **Files:** `styles.css:1341-1345`
 - **Problem:** `a[href]::after` prints `(tel:+48796501780)` next to the phone number and `(mailto:...)` next to the email — both redundant.
-- **Status:** Open
+- **Fix:** Added `a[href^="tel:"]::after, a[href^="mailto:"]::after { content: none; }` to print styles.
+- **Status:** Fixed
 
 ### m8. No favicon
 - **Files:** `index.html` (head)
 - **Problem:** No `<link rel="icon">`. Browser shows default blank icon.
-- **Status:** Open
+- **Fix:** Added inline SVG favicon (red square with "VK" initials).
+- **Status:** Fixed
 
 ### m9. Missing `og:image` meta tag
 - **Files:** `index.html:8-11`
 - **Problem:** Open Graph tags have no image. Social shares show a generic placeholder.
-- **Status:** Open
+- **Fix:** Added `<meta property="og:image" content="asset/about-me.png">`.
+- **Status:** Fixed
 
 ---
 
@@ -142,29 +151,35 @@ Audit date: 2026-02-05
 ### D1. About Me first paragraph text differs from Figma
 - Figma: "I'm a graphic designer and illustrator with over 4 years of professional experience."
 - Code: "Graphic designer and illustrator with 4 years of professional experience."
-- **Status:** Open
+- **Fix:** Updated HTML and EN/PL translations to match Figma text.
+- **Status:** Fixed
 
 ### D2. About Me second paragraph text differs from Figma
 - Figma: "I work across visual identities, print and digital design, creating illustrations and graphic solutions that are clear, thoughtful, and structured."
 - Code: "I create visual identities and illustrations that speak before words do — clear in structure, bold in feeling."
-- **Status:** Open
+- **Fix:** Updated HTML and EN/PL translations to match Figma text.
+- **Status:** Fixed
 
 ### D3. Mobile contact heading plural mismatch
 - Figma: "CONTACTS" (plural)
 - Code: "CONTACT" (singular)
-- **Status:** Open
+- **Fix:** Changed HTML and EN/PL translations to "CONTACTS" / "KONTAKTY".
+- **Status:** Fixed
 
 ### D4. Filter label singular/plural mismatch
 - Figma: "Illustration" (singular)
 - Code: "Illustrations" (plural)
-- **Status:** Open
+- **Fix:** Changed HTML filter buttons and EN/PL translations to singular "Illustration" / "Ilustracja".
+- **Status:** Fixed
 
 ### D5. "more" button default color differs
 - Figma: Red (#FF0000)
-- Code: #E07A7A (muted pink), red only on hover
-- **Status:** Open
+- Code: #CC0000 (darker red for accessibility)
+- **Note:** Kept #CC0000 intentionally — #FF0000 on white fails WCAG AA contrast (4:1). #CC0000 passes at 5.9:1.
+- **Status:** Won't fix (accessibility)
 
 ### D6. Mobile filter button style differs
 - Figma: Outlined/bordered buttons
 - Code: Filled red active state in a 2x2 grid
-- **Status:** Open
+- **Fix:** Added `border: 1.5px solid` to mobile filter buttons. Active state keeps red fill with red border; inactive buttons show black border on transparent background.
+- **Status:** Fixed

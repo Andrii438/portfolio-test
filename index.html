@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfolio of Valeriia Kozinna - Graphic Designer & Illustrator with 4 years of professional experience. Creating visual identities and illustrations that speak before words do.">
+    <meta name="description" content="Portfolio of Valeriia Kozinna - Graphic Designer & Illustrator with over 4 years of professional experience. Visual identities, print and digital design, illustrations and graphic solutions.">
     <meta name="author" content="Valeriia Kozinna">
     <meta property="og:title" content="Valeriia Kozinna — Graphic Designer & Illustrator">
     <meta property="og:description" content="Portfolio showcasing graphic design, illustrations, logos, and visual identities.">
     <meta property="og:type" content="website">
+    <meta property="og:image" content="asset/about-me.png">
     <meta name="twitter:card" content="summary_large_image">
     <title>Valeriia Kozinna — Graphic Designer & Illustrator</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect fill='%23FF0000' width='32' height='32' rx='4'/><text x='16' y='22' font-family='Inter,sans-serif' font-size='18' font-weight='900' fill='white' text-anchor='middle'>VK</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" as="style">
@@ -33,21 +35,28 @@
         </button>
         <a href="#hero" class="header__logo">Valeriia Kozinna</a>
         <nav class="header__nav">
-            <a href="#about" class="header__nav-link">About me</a>
+            <a href="#about" class="header__nav-link">About Me</a>
             <a href="#projects" class="header__nav-link">Projects</a>
-            <a href="#contact" class="header__nav-link">Contact</a>
+            <a href="#contact" class="header__nav-link">Contacts</a>
         </nav>
         <div class="header__lang"><button id="lang-eng" class="header__lang-btn header__lang-active" aria-label="Switch to English">ENG</button> <span class="header__lang-sep">|</span> <button id="lang-pl" class="header__lang-btn header__lang-inactive" aria-label="Switch to Polish">PL</button></div>
     </header>
 
     <div class="mobile-menu" id="mobile-menu">
-        <a href="#about" class="mobile-menu__link">About me</a>
-        <a href="#projects" class="mobile-menu__link">Projects</a>
-        <a href="#contact" class="mobile-menu__link">Contact</a>
-        <div class="mobile-menu__lang">
-            <button id="mobile-lang-eng" class="header__lang-btn header__lang-active" aria-label="Switch to English">ENG</button>
-            <span class="header__lang-sep">|</span>
-            <button id="mobile-lang-pl" class="header__lang-btn header__lang-inactive" aria-label="Switch to Polish">PL</button>
+        <div class="mobile-menu__backdrop" id="mobile-menu-backdrop"></div>
+        <div class="mobile-menu__panel" id="mobile-menu-panel">
+            <button class="mobile-menu__close" id="mobile-menu-close" aria-label="Close menu">
+                <span></span>
+                <span></span>
+            </button>
+            <a href="#about" class="mobile-menu__link">About Me</a>
+            <a href="#projects" class="mobile-menu__link">Projects</a>
+            <a href="#contact" class="mobile-menu__link">Contacts</a>
+            <div class="mobile-menu__lang">
+                <button id="mobile-lang-eng" class="header__lang-btn header__lang-active" aria-label="Switch to English">ENG</button>
+                <span class="header__lang-sep">|</span>
+                <button id="mobile-lang-pl" class="header__lang-btn header__lang-inactive" aria-label="Switch to Polish">PL</button>
+            </div>
         </div>
     </div>
 
@@ -101,8 +110,8 @@
             </div>
             <div class="about__text-col">
                 <div class="about__body-wrap">
-                    <p class="about__body" id="about-body">Graphic designer and illustrator<br>with <strong class="about__highlight">4 years of professional experience.</strong></p>
-                    <p class="about__body about__body--second" id="about-body2">I create visual identities and illustrations that speak before words do — <strong class="about__highlight">clear in structure, bold in feeling.</strong></p>
+                    <p class="about__body" id="about-body">I'm a graphic designer and illustrator<br>with <strong class="about__highlight">over 4 years of professional experience.</strong></p>
+                    <p class="about__body about__body--second" id="about-body2">I work across visual identities, print and digital design, creating illustrations and graphic solutions that are <strong class="about__highlight">clear, thoughtful, and structured.</strong></p>
                 </div>
             </div>
         </div>
@@ -133,7 +142,7 @@
             </div>
             <div class="projects__card"
                  data-category="logos"
-                 data-images='[{"src":"asset/logos/francy.png","label":"Logo","alt":"Francy Logo"},{"src":"asset/print-ads/francy-bag.png","label":"Bag","alt":"Francy - Bag Design"},{"src":"asset/print-ads/francy-label.png","label":"Label","alt":"Francy - Label Design"},{"src":"asset/print-ads/francy-mockup.png","label":"Mockup","alt":"Francy - Brand Mockup"}]'>
+                 data-images='[{"src":"asset/logos/francy.png","label":"Logo","alt":"Francy Logo"},{"src":"asset/print-ads/francy-ad.png","label":"Ad","alt":"Francy - New Collection Ad"},{"src":"asset/print-ads/francy-bag.png","label":"Bag","alt":"Francy - Bag Design"},{"src":"asset/print-ads/francy-label.png","label":"Label","alt":"Francy - Label Design"},{"src":"asset/print-ads/francy-mockup.png","label":"Mockup","alt":"Francy - Brand Mockup"}]'>
                 <div class="projects__card-image">
                     <img src="asset/logos/francy.png" alt="Francy Logo" loading="lazy">
                 </div>
@@ -215,9 +224,9 @@
             <div class="projects__card"
                  data-category="print-ads"
                  data-subcategory="branding"
-                 data-images='[{"src":"asset/print-ads/francy-bag.png","label":"Bag","alt":"Francy - Bag Design"},{"src":"asset/print-ads/francy-label.png","label":"Label","alt":"Francy - Label Design"},{"src":"asset/print-ads/francy-mockup.png","label":"Mockup","alt":"Francy - Brand Mockup"}]'>
+                 data-images='[{"src":"asset/print-ads/francy-ad.png","label":"Ad","alt":"Francy - New Collection Ad"},{"src":"asset/print-ads/francy-bag.png","label":"Bag","alt":"Francy - Bag Design"},{"src":"asset/print-ads/francy-label.png","label":"Label","alt":"Francy - Label Design"},{"src":"asset/print-ads/francy-mockup.png","label":"Mockup","alt":"Francy - Brand Mockup"}]'>
                 <div class="projects__card-image">
-                    <img src="asset/print-ads/francy-mockup.png" alt="Francy - Brand Mockup" loading="lazy">
+                    <img src="asset/print-ads/francy-ad.png" alt="Francy - New Collection Ad" loading="lazy">
                 </div>
                 <button class="projects__card-more">more</button>
             </div>
@@ -255,7 +264,7 @@
         </div>
     </section>
     <section id="contact" class="contact">
-        <h2 class="contact__headline" id="contact-headline">CONTACT</h2>
+        <h2 class="contact__headline" id="contact-headline">CONTACTS</h2>
 
         <div class="contact__content">
             <div class="contact__card">

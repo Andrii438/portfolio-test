@@ -165,7 +165,7 @@ function positionLayout() {
 // ── Language switching ──────────────────────────────────
 var translations = {
     en: {
-        nav: ['About me', 'Projects', 'Contact'],
+        nav: ['About Me', 'Projects', 'Contacts'],
         role: 'Graphic Designer & Illustrator',
         quoteLine1Inside: 'Design is\u00a0 ',
         quoteLine1Outside: 'not decoration.',
@@ -175,19 +175,19 @@ var translations = {
         design: 'DESIGN',
         illustration: '& ILLUSTRATION',
         aboutHeadline: 'ABOUT ME',
-        aboutBody1: 'Graphic designer and illustrator<br>with <strong class="about__highlight">4 years of professional experience.</strong>',
-        aboutBody2: 'I create visual identities and illustrations that speak before words do \u2014 <strong class="about__highlight">clear in structure, bold in feeling.</strong>',
+        aboutBody1: 'I\u2019m a graphic designer and illustrator<br>with <strong class="about__highlight">over 4 years of professional experience.</strong>',
+        aboutBody2: 'I work across visual identities, print and digital design, creating illustrations and graphic solutions that are <strong class="about__highlight">clear, thoughtful, and structured.</strong>',
         projectsHeadline: 'PROJECTS',
         projectsFilters: ['Logos', 'Illustrations', 'Social media', 'Print ads'],
         projectsSeeMore: 'See more projects',
         projectsSeeLess: 'See less',
         projectsCardMore: 'more',
         projectsSubFilters: ['All', 'Branding', 'Posters', 'Materials'],
-        contactHeadline: 'CONTACT'
+        contactHeadline: 'CONTACTS'
     },
     pl: {
-        nav: ['O mnie', 'Projekty', 'Kontakt'],
-        role: 'Projektant Graficzny & Ilustrator',
+        nav: ['O mnie', 'Projekty', 'Kontakty'],
+        role: 'Projektantka Graficzna & Ilustratorka',
         quoteLine1Inside: 'Design to nie ',
         quoteLine1Outside: 'dekoracja.',
         quoteLine2Inside: 'To spos\u00F3b na ',
@@ -196,15 +196,15 @@ var translations = {
         design: 'GRAFICZNE',
         illustration: '& ILUSTRACJA',
         aboutHeadline: 'O MNIE',
-        aboutBody1: 'Graficzka i ilustratorka<br>z <strong class="about__highlight">4-letnim do\u015Bwiadczeniem zawodowym.</strong>',
-        aboutBody2: 'Tworz\u0119 identyfikacje wizualne i ilustracje, kt\u00F3re m\u00F3wi\u0105 zanim padnie s\u0142owo \u2014 <strong class="about__highlight">czytelne w strukturze, odwa\u017Cne w wyrazie.</strong>',
+        aboutBody1: 'Jestem graficzk\u0105 i ilustratork\u0105<br>z <strong class="about__highlight">ponad 4-letnim do\u015Bwiadczeniem zawodowym.</strong>',
+        aboutBody2: 'Pracuj\u0119 w zakresie identyfikacji wizualnej, druku i projektowania cyfrowego, tworz\u0105c ilustracje i rozwi\u0105zania graficzne, kt\u00F3re s\u0105 <strong class="about__highlight">czytelne, przemy\u015Blane i uporz\u0105dkowane.</strong>',
         projectsHeadline: 'PROJEKTY',
         projectsFilters: ['Logotypy', 'Ilustracje', 'Media spo\u0142eczno\u015Bciowe', 'Reklamy drukowane'],
         projectsSeeMore: 'Zobacz wi\u0119cej projekt\u00F3w',
         projectsSeeLess: 'Zobacz mniej',
         projectsCardMore: 'wi\u0119cej',
         projectsSubFilters: ['Wszystko', 'Branding', 'Plakaty', 'Materia\u0142y'],
-        contactHeadline: 'KONTAKT'
+        contactHeadline: 'KONTAKTY'
     }
 };
 
@@ -213,6 +213,7 @@ var currentLang = 'en';
 function setLanguage(lang) {
     currentLang = lang;
     document.documentElement.lang = lang;
+    try { localStorage.setItem('lang', lang); } catch (e) {}
     var t = translations[lang];
     if (!t) return;
 
@@ -350,7 +351,7 @@ function initNavActiveState() {
             activeLink.classList.add('header__nav-link--active');
         }
     }
-    window.addEventListener('scroll', updateActiveOnScroll);
+    window.addEventListener('scroll', updateActiveOnScroll, { passive: true });
     updateActiveOnScroll();
 }
 
@@ -506,19 +507,37 @@ function initLanguageSwitcher() {
 function initMobileMenu() {
     var hamburger = document.getElementById('hamburger-btn');
     var mobileMenu = document.getElementById('mobile-menu');
+    var closeBtn = document.getElementById('mobile-menu-close');
+    var panel = document.getElementById('mobile-menu-panel');
+    var backdrop = document.getElementById('mobile-menu-backdrop');
     if (!hamburger || !mobileMenu) return;
 
+    function closeMenu() {
+        mobileMenu.classList.remove('mobile-menu--open');
+    }
+
     hamburger.addEventListener('click', function() {
-        mobileMenu.classList.toggle('mobile-menu--open');
-        hamburger.classList.toggle('header__hamburger--active');
+        mobileMenu.classList.add('mobile-menu--open');
     });
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeMenu);
+    }
+
+    if (backdrop) {
+        backdrop.addEventListener('click', closeMenu);
+    }
+
+    // Close when clicking empty space inside the panel (not on links/buttons)
+    if (panel) {
+        panel.addEventListener('click', function(e) {
+            if (e.target === panel) closeMenu();
+        });
+    }
 
     var mobileLinks = mobileMenu.querySelectorAll('.mobile-menu__link');
     for (var i = 0; i < mobileLinks.length; i++) {
-        mobileLinks[i].addEventListener('click', function() {
-            mobileMenu.classList.remove('mobile-menu--open');
-            hamburger.classList.remove('header__hamburger--active');
-        });
+        mobileLinks[i].addEventListener('click', closeMenu);
     }
 }
 
@@ -597,6 +616,7 @@ function initLightbox() {
         renderTabs();
         lightbox.classList.add('lightbox--open');
         document.body.style.overflow = 'hidden';
+        updateNavButtons();
         closeBtn.focus();
     }
 
@@ -671,18 +691,27 @@ function initLightbox() {
         if (next && next.images[0]) new Image().src = next.images[0].src;
     }
 
+    function updateNavButtons() {
+        prevBtn.style.display = currentProjectIndex <= 0 ? 'none' : '';
+        nextBtn.style.display = currentProjectIndex >= lightboxProjects.length - 1 ? 'none' : '';
+    }
+
     function prevProject() {
-        currentProjectIndex = (currentProjectIndex - 1 + lightboxProjects.length) % lightboxProjects.length;
+        if (currentProjectIndex <= 0) return;
+        currentProjectIndex--;
         currentImageIndex = 0;
         showCurrentImage();
         renderTabs();
+        updateNavButtons();
     }
 
     function nextProject() {
-        currentProjectIndex = (currentProjectIndex + 1) % lightboxProjects.length;
+        if (currentProjectIndex >= lightboxProjects.length - 1) return;
+        currentProjectIndex++;
         currentImageIndex = 0;
         showCurrentImage();
         renderTabs();
+        updateNavButtons();
     }
 
     function nextImageInProject() {
@@ -760,6 +789,9 @@ function initImageLoading() {
             img.addEventListener('load', function() {
                 img.classList.add('loaded');
             });
+            img.addEventListener('error', function() {
+                img.classList.add('loaded');
+            });
         }
     });
 }
@@ -779,29 +811,25 @@ function initLoadMore() {
     });
 }
 
+function initAll() {
+    positionLayout();
+    initLanguageSwitcher();
+    initNavActiveState();
+    initProjectFilters();
+    initStickyFilters();
+    initMobileMenu();
+    initLightbox();
+    initLoadMore();
+    initImageLoading();
+    try {
+        var saved = localStorage.getItem('lang');
+        if (saved && saved !== currentLang) setLanguage(saved);
+    } catch (e) {}
+}
+
 if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function() {
-        positionLayout();
-        initLanguageSwitcher();
-        initNavActiveState();
-        initProjectFilters();
-        initStickyFilters();
-        initMobileMenu();
-        initLightbox();
-        initLoadMore();
-        initImageLoading();
-    });
+    document.fonts.ready.then(initAll);
 } else {
-    window.addEventListener('load', function() {
-        positionLayout();
-        initLanguageSwitcher();
-        initNavActiveState();
-        initProjectFilters();
-        initStickyFilters();
-        initMobileMenu();
-        initLightbox();
-        initLoadMore();
-        initImageLoading();
-    });
+    window.addEventListener('load', initAll);
 }
 window.addEventListener('resize', debounce(positionLayout, 100));

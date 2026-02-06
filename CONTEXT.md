@@ -37,7 +37,8 @@ asset/
 │   ├── instalift-mockup.png — Instalift mockup
 │   ├── bus-station.jpg — Bus station advertisement (bottle in context)
 │   └── bottle-design.jpg — Bottle product design
-└── print-ads/ — Print advertising projects (8 files, subcategorized)
+└── print-ads/ — Print advertising projects (9 files, subcategorized)
+    ├── francy-ad.png — Francy new collection ad [branding]
     ├── francy-bag.png — Francy bag design [branding]
     ├── francy-label.png — Francy label design [branding]
     ├── francy-mockup.png — Francy brand mockup [branding]
@@ -51,8 +52,13 @@ asset/
 ### Dev/Test Files (NOT committed)
 - `verify.js` — Puppeteer-based automated layout tests for hero (5 viewports)
 - `screenshot.js` — Takes screenshots for visual comparison
+- `test-mobile-menu.js` — Puppeteer tests for mobile menu (slide-in, close button, backdrop)
+- `test-francy.js` — Puppeteer tests for Francy ad card integration
+- `test-about-text.js` — Puppeteer tests for About Me red text line wrapping
 - `design-specs/` — Figma reference images
+- `screenshots/` — Puppeteer test screenshots
 - `node_modules/`, `package.json`, `package-lock.json` — Node dependencies
+- `ISSUES.md` — UX/UI audit issue tracker (all items now fixed)
 
 ## Git Repository
 - Remote: https://github.com/Andrii438/portfolio-test
@@ -68,7 +74,7 @@ asset/
 - Logo: "Valeriia Kozinna" (font-weight 900, letter-spacing: -0.02em)
 - Nav links with animated underline on hover/active
 - Language switcher: ENG | PL buttons with underline animation
-- Mobile: Logo centered, hamburger menu (animated X transformation)
+- Mobile: Logo centered, hamburger on LEFT opens slide-in menu, close X on RIGHT inside menu panel
 
 **Hero:**
 - Red pillar positioned by JS based on text bounding box measurements
@@ -92,7 +98,7 @@ asset/
 - Grid areas: `"image headline" / "image text"`
 - Left column (42%): red upper block (70% width, bleeds left), photo (aspect-ratio 858/785), red lower quarter-circle
 - Headline overlaps into left column via `margin-left: -10vw`
-- Body text with red highlights, `margin-top: 12vw`
+- Body text centered, with red highlights (`white-space: nowrap` to keep red text on one line), `margin-top: 12vw`
 
 **Mobile Layout (CSS Grid):**
 - Grid areas stacked: `"headline" / "image" / "text"`
@@ -128,16 +134,16 @@ asset/
 **Card Styling:**
 - Aspect ratio: 4/3
 - Background placeholder: #D9D9D9
-- "more" button: #E07A7A background, turns #FF0000 on hover
+- "more" button: #CC0000 background (accessible contrast), turns #FF0000 on hover
 - Poster cards use `object-fit: contain` (`.projects__card-image--contain`) to show full image
 
 **Cross-category Lightbox:**
-- Francy logo card (logos) includes print-ads materials in lightbox (Bag, Label, Mockup tabs)
+- Francy logo card (logos) includes print-ads materials in lightbox (Logo, Ad, Bag, Label, Mockup tabs)
 - Bottle design + bus station (social-media) grouped as one lightbox project (Design / In Context)
 
 ### 4. Contact Section
 - Full viewport height (min-height: 100vh), flex centered vertically
-- "CONTACT" headline centered
+- "CONTACTS" headline centered (plural, matching Figma)
 - Two-column layout (stacks on mobile):
   - **Left: Red card** — bleeds to left edge, contains name + phone
   - **Right: Social links** — Email, Facebook, Telegram with SVG icons
@@ -145,7 +151,7 @@ asset/
 
 ### 5. Lightbox
 - Full-screen overlay (rgba(0,0,0,0.95)) for viewing project images
-- Navigation: prev/next buttons, keyboard arrows, touch swipe gestures
+- Navigation: prev/next buttons (hidden at boundaries, no wrap-around), keyboard arrows, touch swipe gestures
 - Tab buttons for multi-image projects (Artwork / In Context)
 - Counter showing current position: "1 / 7 • 1/2"
 - Closes on: X button, Escape key, clicking backdrop
@@ -176,7 +182,8 @@ asset/
 ### Media Queries
 - `@media (max-width: 1023px)`: Tablet adjustments (header, hero red square)
 - `@media (max-width: 768px)`: Mobile layout (hamburger menu, stacked sections)
-- `@media print`: Print styles (hides UI, shows all projects)
+- `@media (prefers-reduced-motion: reduce)`: Disables all animations/transitions
+- `@media print`: Print styles (hides UI, shows all projects, suppresses tel:/mailto: URLs)
 
 ### Accessibility Features
 - Skip-to-content link (`.skip-link`) — hidden until focused
@@ -184,7 +191,8 @@ asset/
 - ARIA labels on buttons, links, and lightbox
 - `aria-hidden="true"` on decorative SVG icons
 - Language switcher uses `<button>` elements with aria-labels
-- Lightbox has `role="dialog"` and `aria-modal="true"`
+- Lightbox has `role="dialog"` and `aria-modal="true"` with focus trap
+- `prefers-reduced-motion` respected — all animations disabled
 
 ### Animations & Transitions
 - **Nav links**: Underline slides in via `transform: scaleX()` with `cubic-bezier(0.16, 1, 0.3, 1)`
@@ -193,8 +201,7 @@ asset/
 - **Project cards**: Lift up 4px + shadow on hover (`transform: translateY(-4px)`)
 - **Card images**: Scale to 1.05x on hover
 - **Lazy images**: Fade in when loaded (opacity 0 → 1)
-- **Hamburger menu**: Transforms to X when active (rotate spans)
-- **Mobile menu**: Full-screen overlay slides in
+- **Mobile menu**: Full-screen panel slides in from left (`translateX(-100%)` → `translateX(0)`), with backdrop
 - **Sticky filters**: Slide down with opacity transition
 
 ## JavaScript (script.js)
@@ -204,7 +211,7 @@ asset/
 
 ### Core Functions
 - `positionLayout()` — Measures hero text, positions quote + red pillar + author (debounced on resize)
-- `setLanguage(lang)` — Updates all text for EN/PL, toggles PL-specific CSS classes
+- `setLanguage(lang)` — Updates all text for EN/PL, toggles PL-specific CSS classes, persists to localStorage
 - `setActiveNavLink(clickedLink)` — Manages nav active state on click
 - `initNavActiveState()` — Click + scroll-based nav active state
 - `filterProjects()` — Applies current filter + sub-filter, respects display limits
@@ -212,10 +219,11 @@ asset/
 - `initProjectFilters()` — Category + sub-category filter button toggling
 - `initStickyFilters()` — Shows/hides sticky filter bar based on scroll
 - `initLanguageSwitcher()` — ENG/PL click handlers
-- `initMobileMenu()` — Hamburger menu toggle, closes menu on link click
+- `initMobileMenu()` — Hamburger opens slide-in panel, close via X button / backdrop / empty panel click / nav link
 - `initLightbox()` — Project image viewer with navigation
 - `initLoadMore()` — "See more projects" functionality
-- `initImageLoading()` — Adds fade-in effect to lazy-loaded images
+- `initImageLoading()` — Adds fade-in effect to lazy-loaded images (+ error handler for failed loads)
+- `initAll()` — Wrapper that runs all init functions + restores saved language from localStorage
 
 ### Translations Object
 Both `en` and `pl` keys with:
@@ -229,7 +237,7 @@ Both `en` and `pl` keys with:
 - `contactHeadline`
 
 ### Initialization Order
-Runs on `document.fonts.ready` (fallback: window load):
+Runs `initAll()` on `document.fonts.ready` (fallback: window load):
 1. positionLayout()
 2. initLanguageSwitcher()
 3. initNavActiveState()
@@ -239,6 +247,7 @@ Runs on `document.fonts.ready` (fallback: window load):
 7. initLightbox()
 8. initLoadMore()
 9. initImageLoading()
+10. Restore saved language from localStorage
 
 ## SEO & Performance
 
@@ -249,7 +258,9 @@ Runs on `document.fonts.ready` (fallback: window load):
 <meta property="og:title" content="Valeriia Kozinna — Graphic Designer & Illustrator">
 <meta property="og:description" content="Portfolio showcasing...">
 <meta property="og:type" content="website">
+<meta property="og:image" content="asset/about-me.png">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,..."> (inline SVG favicon, red "VK")
 ```
 
 ### Performance Optimizations
@@ -257,7 +268,8 @@ Runs on `document.fonts.ready` (fallback: window load):
 - **Font preconnect**: `preconnect` to fonts.googleapis.com and fonts.gstatic.com
 - **Lazy loading**: All project images use `loading="lazy"`
 - **Debounced resize**: `positionLayout()` debounced at 100ms
-- **Scroll listeners**: Use `{ passive: true }` for better scroll performance
+- **Scroll listeners**: All use `{ passive: true }` for better scroll performance
+- **Language persistence**: Saved to localStorage, restored on page load
 - **Image preloading in lightbox**: Adjacent projects preloaded for instant navigation
 
 ## Hero verify.js Checks (12 total)
@@ -302,3 +314,11 @@ Runs on `document.fonts.ready` (fallback: window load):
 - **Mobile About Me fix**: Headline moved to top, right-aligned using CSS Grid
 - **Security**: Added `rel="noopener noreferrer"` to external links
 - **Print styles**: Added for portfolio printing
+- **Mobile menu redesign**: Slides in from left, close X at top-right inside panel, backdrop + empty-space click to close
+- **Francy ad card added**: New `francy-ad.png` as first print-ads card (branding), also added as "Ad" tab in Francy logo card lightbox
+- **Francy file renamed**: `print-ads/francy.png` → `print-ads/francy-ad.png`
+- **Minor issues batch fix (m1-m9)**: passive scroll listeners, prefers-reduced-motion, lightbox no-wrap-around, failed image visibility, contact card fluid padding, language localStorage persistence, print URL suppression, SVG favicon, og:image meta tag
+- **Design spec alignment (D1-D6)**: About Me text matched to Figma, "CONTACTS" plural, "Illustrations" filter label, mobile filter bordered style
+- **Text consistency review**: Nav capitalization ("About Me"), nav/heading plural consistency ("Contacts"/"CONTACTS"), PL role feminine forms ("Projektantka Graficzna & Ilustratorka"), filter labels all plural
+- **About Me text centering**: Body text `text-align: center` on desktop, red highlights `white-space: nowrap`
+- **Meta description updated**: Aligned with new About Me copy
