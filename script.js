@@ -55,18 +55,15 @@ function positionLayout() {
         // Block bottom: only 8px below DESIGN so & ILLUSTRATION doesn't touch
         var blockBottom = d.bottom - h.top + 3;
 
-        // Top: below quote
+        // Height: sized relative to DESIGN word (same as original)
+        var blockHeight = d.height * 3;
+        var blockTop = blockBottom - blockHeight;
+
+        // Don't go above the quote
         var minTop = quoteBottom - h.top + 15;
-
-        // Height spans from minTop to blockBottom
-        var blockHeight = blockBottom - minTop;
-        var blockTop = minTop;
-
-        // Ensure minimum height covers DESIGN
-        if (blockHeight < d.height * 1.5) {
-            blockHeight = d.height * 2;
-            blockTop = blockBottom - blockHeight;
-            if (blockTop < minTop) blockTop = minTop;
+        if (blockTop < minTop) {
+            blockTop = minTop;
+            blockHeight = blockBottom - blockTop;
         }
 
         block.style.left   = blockLeft + 'px';

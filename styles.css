@@ -1031,7 +1031,7 @@ a {
         margin-top: 48px;
         min-height: calc(100vh - 48px);
         height: auto;
-        padding: 20px 20px 30px;
+        padding: 20px 20px 15vh;
         display: flex;
         flex-direction: column;
         position: relative;
@@ -1075,8 +1075,8 @@ a {
         max-width: 70%;
         margin-left: auto;
         margin-right: 20px;
-        margin-top: 30vw;
-        margin-bottom: 15vw;
+        margin-top: 35vw;
+        margin-bottom: 30vh;
         padding: 0;
         left: auto !important;
         top: auto !important;
@@ -1111,7 +1111,7 @@ a {
         line-height: 1.1;
         text-align: left;
         white-space: normal;
-        margin-top: 25px;
+        margin-top: 0;
         margin-bottom: 0;
     }
 
@@ -1138,8 +1138,8 @@ a {
         right: auto;
         top: auto !important;
         align-items: flex-start;
-        margin-top: 30px;
-        padding-bottom: 20px;
+        margin-top: auto;
+        padding-bottom: 0;
     }
 
     .hero__author-name {
