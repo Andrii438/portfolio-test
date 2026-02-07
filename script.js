@@ -240,25 +240,25 @@ var translations = {
         contactHeadline: 'CONTACTS'
     },
     pl: {
-        nav: ['O mnie', 'Projekty', 'Kontakty'],
-        role: 'Projektantka Graficzna & Ilustratorka',
-        quoteLine1Inside: 'Design to nie ',
-        quoteLine1Outside: 'dekoracja.',
-        quoteLine2Inside: 'To spos\u00F3b na ',
-        quoteLine2Outside: 'organizowanie znacze\u0144.',
-        graphic: 'PROJEKTOWANIE ',
-        design: 'GRAFICZNE',
-        illustration: '& ILUSTRACJA',
+        nav: ['O mnie', 'Projekty', 'Kontakt'],
+        role: 'Grafik komputerowy & ilustrator',
+        quoteLine1Inside: 'Design\u00a0 ',
+        quoteLine1Outside: 'nie tylko ozdabia.',
+        quoteLine2Inside: 'Design\u00a0 ',
+        quoteLine2Outside: 'nadaje sens.',
+        graphic: 'GRAPHIC ',
+        design: 'DESIGN',
+        illustration: '& ILLUSTRATION',
         aboutHeadline: 'O MNIE',
-        aboutBody1: 'Jestem graficzk\u0105 i ilustratork\u0105<br>z <strong class="about__highlight">ponad 4-letnim do\u015Bwiadczeniem zawodowym.</strong>',
-        aboutBody2: 'Pracuj\u0119 w zakresie identyfikacji wizualnej, druku i projektowania cyfrowego, tworz\u0105c ilustracje i rozwi\u0105zania graficzne, kt\u00F3re s\u0105 <strong class="about__highlight">czytelne, przemy\u015Blane i uporz\u0105dkowane.</strong>',
+        aboutBody1: 'Jestem projektantk\u0105 graficzn\u0105 i ilustratork\u0105 z ponad <strong class="about__highlight">4-letnim\u00a0do\u015Bwiadczeniem\u00a0zawodowym.</strong>',
+        aboutBody2: 'Pracuj\u0119 nad identyfikacjami wizualnymi, ilustracjami, oraz projektami do druku i digitalu.<br>Ja tworz\u0119 grafik\u0119, kt\u00F3ra jest <strong class="about__highlight">czytelna,\u00a0i\u00a0uporz\u0105dkowana.</strong>',
         projectsHeadline: 'PROJEKTY',
-        projectsFilters: ['Logotypy', 'Ilustracje', 'Media spo\u0142eczno\u015Bciowe', 'Reklamy drukowane'],
+        projectsFilters: ['Logo', 'Ilustracje', 'Grafika digital', 'Grafika do druku'],
         projectsSeeMore: 'Zobacz wi\u0119cej projekt\u00F3w',
         projectsSeeLess: 'Zobacz mniej',
         projectsCardMore: 'wi\u0119cej',
         projectsSubFilters: ['Wszystko', 'Branding', 'Plakaty', 'Materia\u0142y'],
-        contactHeadline: 'KONTAKTY'
+        contactHeadline: 'KONTAKT'
     }
 };
 
@@ -300,14 +300,7 @@ function setLanguage(lang) {
     if (spanDesignText) spanDesignText.textContent = t.design;
     if (spanIllus) spanIllus.textContent = t.illustration;
 
-    // Scale headline + quote for Polish (longer words)
-    if (headline) {
-        headline.classList.toggle('hero__headline--pl', lang === 'pl');
-    }
-    var quoteEl = document.getElementById('quote');
-    if (quoteEl) {
-        quoteEl.classList.toggle('hero__quote--pl', lang === 'pl');
-    }
+    // Note: headline stays English in both languages, no PL-specific sizing needed
 
     // About section
     var aboutHL = document.getElementById('about-headline');

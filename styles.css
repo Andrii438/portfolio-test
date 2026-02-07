@@ -411,7 +411,6 @@ a {
 .about__highlight {
     font-weight: 900;
     color: var(--color-red);
-    white-space: nowrap;
 }
 
 /* ============================================
@@ -1324,10 +1323,6 @@ a {
         text-align: center;
         max-width: 100%;
         line-height: 1.4;
-    }
-
-    .about__highlight {
-        white-space: normal;
     }
 
     /* --- Projects --- */

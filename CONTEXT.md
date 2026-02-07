@@ -55,6 +55,7 @@ asset/
 - `test-mobile-menu.js` — Puppeteer tests for mobile menu (slide-in, close button, backdrop)
 - `test-francy.js` — Puppeteer tests for Francy ad card integration
 - `test-about-text.js` — Puppeteer tests for About Me red text line wrapping
+- `test-polish-version.js` — Puppeteer tests for Polish translations, red block overlap, and screenshots (desktop/mobile/tablet)
 - `design-specs/` — Figma reference images
 - `screenshots/` — Puppeteer test screenshots
 - `node_modules/`, `package.json`, `package-lock.json` — Node dependencies
@@ -227,14 +228,14 @@ asset/
 
 ### Translations Object
 Both `en` and `pl` keys with:
-- `nav` — 3 nav link labels
-- `role` — Author role text
-- `quoteLine1Inside/Outside`, `quoteLine2Inside/Outside` — Hero quote spans
-- `graphic`, `design`, `illustration` — Hero headline words
-- `aboutHeadline`, `aboutBody1`, `aboutBody2` — About section text
-- `projectsHeadline`, `projectsFilters`, `projectsSeeMore`, `projectsSeeLess`, `projectsCardMore`
-- `projectsSubFilters` — Print ads sub-filter labels (All, Branding, Posters, Materials)
-- `contactHeadline`
+- `nav` — 3 nav link labels (EN: About Me/Projects/Contacts, PL: O mnie/Projekty/Kontakt)
+- `role` — Author role text (EN: Graphic Designer & Illustrator, PL: Grafik komputerowy & ilustrator)
+- `quoteLine1Inside/Outside`, `quoteLine2Inside/Outside` — Hero quote spans (PL: "Design" is the inside span on both lines, overlapping the red block)
+- `graphic`, `design`, `illustration` — Hero headline words (stays English in both languages)
+- `aboutHeadline`, `aboutBody1`, `aboutBody2` — About section text (PL: uses `<br>` before "Ja" to prevent orphaning, `\u00a0` within highlights to keep red phrases unbreakable)
+- `projectsHeadline`, `projectsFilters`, `projectsSeeMore`, `projectsSeeLess`, `projectsCardMore` (PL filters: Logo, Ilustracje, Grafika digital, Grafika do druku)
+- `projectsSubFilters` — Print ads sub-filter labels (EN: All/Branding/Posters/Materials, PL: Wszystko/Branding/Plakaty/Materiały)
+- `contactHeadline` (EN: CONTACTS, PL: KONTAKT)
 
 ### Initialization Order
 Runs `initAll()` on `document.fonts.ready` (fallback: window load):
@@ -289,7 +290,7 @@ Runs `initAll()` on `document.fonts.ready` (fallback: window load):
 ## Important Notes
 - The headline is NOT a grid — uses standard block/inline-block layout
 - `#span-design-text` is an inner span inside `#span-design` for accurate DESIGN width measurement
-- Polish text uses smaller font classes: `.hero__headline--pl`, `.hero__quote--pl`
+- Polish headline stays English — `hero__headline--pl` and `hero__quote--pl` classes are no longer toggled
 - About section headline is OUTSIDE `.about__text-col` in HTML for mobile positioning
 - Project images use `loading="lazy"` for performance
 - External edits have repeatedly reverted changes — always read files before editing
@@ -322,3 +323,6 @@ Runs `initAll()` on `document.fonts.ready` (fallback: window load):
 - **Text consistency review**: Nav capitalization ("About Me"), nav/heading plural consistency ("Contacts"/"CONTACTS"), PL role feminine forms ("Projektantka Graficzna & Ilustratorka"), filter labels all plural
 - **About Me text centering**: Body text `text-align: center` on desktop, red highlights `white-space: nowrap`
 - **Meta description updated**: Aligned with new About Me copy
+- **Polish version redesign**: Complete PL translation overhaul per design spec — quote uses "Design" as inside span on both lines (overlaps red block), headline stays English in both languages, nav/filters/contact updated (Kontakt not Kontakty), author role changed to "Grafik komputerowy & ilustrator", project filters to Logo/Ilustracje/Grafika digital/Grafika do druku
+- **About highlight fix**: Removed `white-space: nowrap` from `.about__highlight` (caused red text to always jump to new line); instead uses `\u00a0` within highlight strings to keep red phrases as unbreakable units while flowing inline
+- **About body2 line break**: Added `<br>` before "Ja" in Polish aboutBody2 to prevent orphaning at wide viewports
