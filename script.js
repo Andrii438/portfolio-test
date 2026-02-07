@@ -236,7 +236,8 @@ var translations = {
         projectsSeeMore: 'See more projects',
         projectsSeeLess: 'See less',
         projectsCardMore: 'more',
-        projectsSubFilters: ['All', 'Branding', 'Posters', 'Materials'],
+        projectsSubFilters: ['All', 'Branding', 'Packaging', 'Posters', 'Materials'],
+        lightboxLabels: {},
         contactHeadline: 'CONTACTS'
     },
     pl: {
@@ -257,7 +258,20 @@ var translations = {
         projectsSeeMore: 'Zobacz wi\u0119cej projekt\u00F3w',
         projectsSeeLess: 'Zobacz mniej',
         projectsCardMore: 'wi\u0119cej',
-        projectsSubFilters: ['Wszystko', 'Branding', 'Plakaty', 'Materia\u0142y'],
+        projectsSubFilters: ['Wszystko', 'Branding', 'Opakowania', 'Plakaty', 'Materia\u0142y'],
+        lightboxLabels: {
+            'Logo': 'Logo',
+            'Ad': 'Reklama',
+            'Bag': 'Torba',
+            'Label': 'Metka',
+            'Mockup': 'Mockup',
+            'Design': 'Projekt',
+            'In Context': 'W kontek\u015Bcie',
+            'Artwork': 'Grafika',
+            'Poster': 'Plakat',
+            'Cinema Poster': 'Plakat kinowy',
+            'Packaging': 'Opakowanie'
+        },
         contactHeadline: 'KONTAKT'
     }
 };
@@ -708,10 +722,12 @@ function initLightbox() {
         var project = lightboxProjects[currentProjectIndex];
         if (!project || project.images.length <= 1) return;
 
+        var labelMap = translations[currentLang].lightboxLabels || {};
         project.images.forEach(function(img, index) {
             var tab = document.createElement('button');
             tab.className = 'lightbox__tab' + (index === currentImageIndex ? ' lightbox__tab--active' : '');
-            tab.textContent = img.label || ('View ' + (index + 1));
+            var label = img.label || ('View ' + (index + 1));
+            tab.textContent = labelMap[label] || label;
             tab.addEventListener('click', function() {
                 currentImageIndex = index;
                 showCurrentImage();

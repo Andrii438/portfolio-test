@@ -559,6 +559,7 @@ a {
     background-color: #CC0000;
     border: none;
     padding: 0.5em 1.8em;
+    border-radius: 20px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -585,6 +586,7 @@ a {
     background: none;
     border: 2px solid var(--color-red);
     padding: 0.6em 2em;
+    border-radius: 24px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -928,7 +930,7 @@ a {
 
 .mobile-menu__close {
     position: absolute;
-    top: 60px;
+    top: 80px;
     right: 20px;
     background: none;
     border: none;
@@ -1017,6 +1019,20 @@ a {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
+    }
+
+    /* ----- Filters: bordered like mobile ----- */
+    .projects__filter {
+        border: 1.5px solid var(--color-black);
+    }
+
+    .projects__filter--active {
+        border-color: var(--color-red);
+    }
+
+    .projects__filter:not(.projects__filter--active) {
+        background: transparent;
+        color: var(--color-black);
     }
 
     /* ----- Hero layout ----- */

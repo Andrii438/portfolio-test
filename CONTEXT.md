@@ -32,16 +32,21 @@ asset/
 │   └── cosmic-journey/
 │       ├── illustration.png
 │       └── book-mockup.png
-├── social-media/ — Social media design projects (4 files)
+├── social-media/ — Social media design projects (6 files)
 │   ├── instalift.png — Instalift social media design
 │   ├── instalift-mockup.png — Instalift mockup
+│   ├── pro-repair.png — Pro Repair Complex social media design
+│   ├── pro-repair-mockup.png — Pro Repair phone mockup
 │   ├── bus-station.jpg — Bus station advertisement (bottle in context)
 │   └── bottle-design.jpg — Bottle product design
-└── print-ads/ — Print advertising projects (9 files, subcategorized)
+└── print-ads/ — Print advertising projects (12 files, subcategorized)
     ├── francy-ad.png — Francy new collection ad [branding]
     ├── francy-bag.png — Francy bag design [branding]
     ├── francy-label.png — Francy label design [branding]
     ├── francy-mockup.png — Francy brand mockup [branding]
+    ├── yarrr-chips-packaging.jpg — Yarrr Chips bag packaging design [packaging]
+    ├── yarrr-chips-poster.jpg — Yarrr Chips Grinch ad poster [packaging]
+    ├── yarrr-chips-mockup.jpg — Yarrr Chips bus station mockup [packaging]
     ├── poster.jpg — Poster design [posters]
     ├── poster-cinema.jpg — Cinema poster design [posters]
     ├── menu-la-pasta.png — La Pasta menu design [materials]
@@ -111,7 +116,7 @@ asset/
 - "PROJECTS" headline (same style as other sections)
 - Filter buttons: Logos, Illustrations, Social media, Print ads (with active state)
 - Sticky filter bar appears when original filters scroll past header
-- **Sub-filters for Print ads**: All, Branding, Posters, Materials (pill-shaped, appears only when Print ads active)
+- **Sub-filters for Print ads**: All, Branding, Packaging, Posters, Materials (pill-shaped, appears only when Print ads active)
 - 2-column grid of project cards (1-column on mobile)
 - Each card has hover effect (lift + shadow)
 - "more" button opens lightbox
@@ -121,7 +126,7 @@ asset/
 
 **Project Card Data Attributes:**
 - `data-category` — Filter category (logos, illustrations, social-media, print-ads)
-- `data-subcategory` — Sub-filter for print-ads (branding, posters, materials)
+- `data-subcategory` — Sub-filter for print-ads (branding, packaging, posters, materials)
 - `data-images` — JSON array for lightbox gallery: `[{src, label, alt}, ...]`
 
 **Filtering Behavior:**
@@ -135,12 +140,15 @@ asset/
 **Card Styling:**
 - Aspect ratio: 4/3
 - Background placeholder: #D9D9D9
-- "more" button: #CC0000 background (accessible contrast), turns #FF0000 on hover
+- "more" button: #CC0000 background (accessible contrast), turns #FF0000 on hover, pill-shaped (`border-radius: 20px`)
+- "See more projects" button: pill-shaped (`border-radius: 24px`)
 - Poster cards use `object-fit: contain` (`.projects__card-image--contain`) to show full image
 
 **Cross-category Lightbox:**
 - Francy logo card (logos) includes print-ads materials in lightbox (Logo, Ad, Bag, Label, Mockup tabs)
 - Bottle design + bus station (social-media) grouped as one lightbox project (Design / In Context)
+- Pro Repair (social-media) grouped: Design / Mockup
+- Yarrr Chips (print-ads/packaging) grouped: Packaging / Poster / Mockup
 
 ### 4. Contact Section
 - Full viewport height (min-height: 100vh), flex centered vertically
@@ -153,7 +161,7 @@ asset/
 ### 5. Lightbox
 - Full-screen overlay (rgba(0,0,0,0.95)) for viewing project images
 - Navigation: prev/next buttons (hidden at boundaries, no wrap-around), keyboard arrows, touch swipe gestures
-- Tab buttons for multi-image projects (Artwork / In Context)
+- Tab buttons for multi-image projects (Artwork / In Context), translated to Polish when PL is active
 - Counter showing current position: "1 / 7 • 1/2"
 - Closes on: X button, Escape key, clicking backdrop
 - **Keyboard controls**: Left/Right arrows = prev/next project, Up/Down = prev/next image in project
@@ -234,7 +242,8 @@ Both `en` and `pl` keys with:
 - `graphic`, `design`, `illustration` — Hero headline words (stays English in both languages)
 - `aboutHeadline`, `aboutBody1`, `aboutBody2` — About section text (PL: uses `<br>` before "Ja" to prevent orphaning, `\u00a0` within highlights to keep red phrases unbreakable)
 - `projectsHeadline`, `projectsFilters`, `projectsSeeMore`, `projectsSeeLess`, `projectsCardMore` (PL filters: Logo, Ilustracje, Grafika digital, Grafika do druku)
-- `projectsSubFilters` — Print ads sub-filter labels (EN: All/Branding/Posters/Materials, PL: Wszystko/Branding/Plakaty/Materiały)
+- `projectsSubFilters` — Print ads sub-filter labels (EN: All/Branding/Packaging/Posters/Materials, PL: Wszystko/Branding/Opakowania/Plakaty/Materiały)
+- `lightboxLabels` — PL translation map for lightbox tab labels (e.g. Ad→Reklama, Bag→Torba, Label→Metka, Design→Projekt, Artwork→Grafika, Poster→Plakat, Packaging→Opakowanie, In Context→W kontekście, Cinema Poster→Plakat kinowy); EN uses empty map (pass-through)
 - `contactHeadline` (EN: CONTACTS, PL: KONTAKT)
 
 ### Initialization Order
@@ -326,3 +335,9 @@ Runs `initAll()` on `document.fonts.ready` (fallback: window load):
 - **Polish version redesign**: Complete PL translation overhaul per design spec — quote uses "Design" as inside span on both lines (overlaps red block), headline stays English in both languages, nav/filters/contact updated (Kontakt not Kontakty), author role changed to "Grafik komputerowy & ilustrator", project filters to Logo/Ilustracje/Grafika digital/Grafika do druku
 - **About highlight fix**: Removed `white-space: nowrap` from `.about__highlight` (caused red text to always jump to new line); instead uses `\u00a0` within highlight strings to keep red phrases as unbreakable units while flowing inline
 - **About body2 line break**: Added `<br>` before "Ja" in Polish aboutBody2 to prevent orphaning at wide viewports
+- **New projects added**: Yarrr Chips (print-ads/packaging — packaging design, Grinch ad poster, bus station mockup) and Pro Repair (social-media — design + phone mockup). Files renamed to kebab-case from original exports
+- **Packaging subcategory added**: New "Packaging" sub-filter for print-ads (EN: Packaging, PL: Opakowania)
+- **Lightbox tab labels translated**: Added `lightboxLabels` translation map so lightbox tabs (Ad, Bag, Label, etc.) display in Polish when PL is active
+- **Rounded buttons**: "more" button (`border-radius: 20px`) and "See more projects" button (`border-radius: 24px`) now pill-shaped
+- **Tablet filter borders**: Added `border: 1.5px solid` to filter buttons in tablet media query for consistency with mobile
+- **Mobile menu X repositioned**: Moved close button from `top: 60px` to `top: 80px` for more spacing below the fixed header
