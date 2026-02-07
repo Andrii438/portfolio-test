@@ -997,6 +997,119 @@ a {
 }
 
 /* ============================================
+   Tablet: 769px–1024px (portrait only)
+   ============================================ */
+@media (min-width: 769px) and (max-width: 1024px) and (min-height: 900px) {
+
+    /* ----- Header: hamburger nav like mobile ----- */
+    .header__nav {
+        display: none;
+    }
+
+    .header__lang {
+        display: none;
+    }
+
+    .header__hamburger {
+        display: flex;
+    }
+
+    .header__logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* ----- Hero layout ----- */
+    .hero {
+        min-height: calc(100vh - 48px);
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        padding: 0 5vw;
+        padding-bottom: 5vh;
+    }
+
+    /* Small red rectangle - top right, taller portrait */
+    .hero__red-square {
+        position: absolute;
+        top: 5%;
+        right: 5vw;
+        width: clamp(80px, 11vw, 120px);
+        height: auto;
+        aspect-ratio: 82 / 150;
+    }
+
+    /* Red block — positioned by JS */
+    .hero__red-block {
+        opacity: 1 !important;
+    }
+
+    /* Quote — left-aligned, larger text */
+    .hero__quote {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        text-align: left;
+        margin: 0;
+        margin-top: 25vh;
+        margin-left: 30%;
+        width: auto;
+        white-space: nowrap;
+        z-index: 2;
+        font-size: clamp(22px, 2.8vw, 30px);
+    }
+
+    .hero__quote-line {
+        display: block;
+        text-align: left;
+    }
+
+    .hero__quote-line > span {
+        display: inline;
+    }
+
+    #span-design-is,
+    #span-its-a-way {
+        text-align: left;
+        width: auto !important;
+    }
+
+    #span-not-decoration,
+    #span-to-organize {
+        margin-left: 0;
+    }
+
+    /* Headline — left-aligned, positioned by flow */
+    .hero__headline {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        z-index: 2;
+        margin-top: 28vh;
+        font-size: clamp(50px, 8.5vw, 90px);
+    }
+
+    /* Author — bottom left */
+    .hero__author {
+        position: relative;
+        right: auto;
+        top: auto !important;
+        align-items: flex-start;
+        margin-top: auto;
+        z-index: 2;
+    }
+
+    .hero__author-name {
+        font-size: clamp(14px, 1.8vw, 20px);
+    }
+
+    .hero__author-role {
+        font-size: clamp(14px, 1.8vw, 20px);
+    }
+}
+
+/* ============================================
    Mobile: max-width 768px
    ============================================ */
 @media (max-width: 768px) {

@@ -25,6 +25,63 @@ function positionLayout() {
 
     if (!hero || !block || !spanD || !spanDT || !spanDI || !spanIAW || !quote) return;
 
+    // ── Tablet layout (769–1024) ──────────────────────────
+    if (window.innerWidth >= 769 && window.innerWidth <= 1024 && window.innerHeight >= 900) {
+        // Clear desktop inline styles
+        quote.style.position = '';
+        quote.style.left = '';
+        quote.style.top = '';
+        spanDI.style.width = '';
+        spanIAW.style.width = '';
+        var author = document.querySelector('.hero__author');
+        if (author) author.style.top = '';
+
+        var h = hero.getBoundingClientRect();
+        var d = spanD.getBoundingClientRect();
+        var dt = spanDT.getBoundingClientRect();
+        var spanG = document.getElementById('span-graphic');
+        var quoteEl = document.querySelector('.hero__quote');
+        var illus = document.getElementById('span-illustration');
+
+        var gRect = spanG ? spanG.getBoundingClientRect() : null;
+        var qRect = quoteEl ? quoteEl.getBoundingClientRect() : null;
+        var iRect = illus ? illus.getBoundingClientRect() : null;
+
+        // Red block: anchor bottom to DESIGN, shrink from top
+        var blockBottom = d.bottom - h.top + 5;
+        var fullHeight = blockBottom - (qRect ? (qRect.bottom - h.top + 20) : (d.top - h.top - 200));
+        var blockHeight = fullHeight * 0.75; // 25% shorter
+        var blockTop = blockBottom - blockHeight; // shrink from top, bottom stays anchored
+
+        // Ensure block doesn't overlap quote
+        var quoteLimit = qRect ? (qRect.bottom - h.top + 20) : 0;
+        if (blockTop < quoteLimit) {
+            blockTop = quoteLimit;
+            blockHeight = blockBottom - blockTop;
+        }
+
+        // Red block left: starts after GRAPHIC (small gap)
+        var blockLeft = gRect ? (gRect.right - h.left + 2) : (d.left - h.left);
+
+        // Width: smaller square-ish block, ensure DESIGN is covered
+        var designWidth = dt.right - dt.left;
+        var blockWidth = Math.max(blockHeight * 0.85, designWidth + 40);
+
+        // Don't exceed viewport right edge
+        var maxRight = h.width - window.innerWidth * 0.05;
+        if (blockLeft + blockWidth > maxRight) {
+            blockWidth = maxRight - blockLeft;
+        }
+
+        block.style.left   = blockLeft + 'px';
+        block.style.top    = blockTop + 'px';
+        block.style.width  = blockWidth + 'px';
+        block.style.height = blockHeight + 'px';
+        block.classList.add('hero__red-block--ready');
+
+        return;
+    }
+
     // Mobile layout — position red block behind DESIGN word
     if (window.innerWidth <= 768) {
         // Clear desktop inline styles
